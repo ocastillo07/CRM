@@ -1,29 +1,35 @@
 [OpenFiles]
 Module1=dmconexion.php
 Module2=uactividadesxasignar.php
-Module3=uactividadesxasignarvista.php
-Module4=uactividades.php
+Module3=uactividadesxasignar2.php
+Module4=uactividadesxasignarvista2.php
+Module5=uactividadesxasignarvista.php
 [dmconexion.php]
 Line=0
 Position=0
 [C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\dmconexion.php]
 BreakpointCount=0
 [uactividadesxasignar.php]
-Line=10
-Position=42
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignar.php]
-BreakpointCount=0
-[uactividadesxasignarvista.php]
-Line=104
-Position=7
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignarvista.php]
-BreakpointCount=0
-[uactividades.php]
 Line=0
 Position=0
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividades.php]
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignar.php]
+BreakpointCount=0
+[uactividadesxasignar2.php]
+Line=502
+Position=19
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignar2.php]
+BreakpointCount=0
+[uactividadesxasignarvista2.php]
+Line=261
+Position=58
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignarvista2.php]
+BreakpointCount=0
+[uactividadesxasignarvista.php]
+Line=169
+Position=81
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignarvista.php]
 BreakpointCount=0
 [Watches]
 Watchcount=0
 [Status]
-OpenModule=uactividadesxasignar.php
+OpenModule=uactividadesxasignar2.php

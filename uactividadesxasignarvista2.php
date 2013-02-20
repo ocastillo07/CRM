@@ -20,7 +20,7 @@ use_unit("extctrls.inc.php");
 use_unit("stdctrls.inc.php");
 
 //Class definition
-class uactividadesxasignarvista extends Page
+class uactividadesxasignarvista2 extends Page
 {
        public $hfidpuesto = null;
        public $dsactividad = null;
@@ -41,7 +41,7 @@ class uactividadesxasignarvista extends Page
        public $btnnuevo = null;
        public $pbotones = null;
        public $gridactividad = null;
-       function uactividadesxasignarvistaJSLoad($sender, $params)
+       function uactividadesxasignarvista2JSLoad($sender, $params)
        {
 
        ?>
@@ -55,7 +55,7 @@ class uactividadesxasignarvista extends Page
 
        function btnexportarClick($sender, $params)
        {
-         if(Derechos('EXPACTIVXASIG')==false)
+         if(Derechos('EXPACTIVXASIG2')==false)
          {
             echo '<script language="javascript" type="text/javascript">
                     alert(\' No tienes Derechos para Exportar Actividades por Asignar\');
@@ -96,30 +96,30 @@ class uactividadesxasignarvista extends Page
        //Add your javascript code here
          if(!confirm('Desea Eliminar la Actividad Seleccionada?'))
             return(false);
-         document.location.href("uactividadesxasignar.php?idactividad="+document.getElementById("hfidactividad").value+"&elim=1");
+         document.location.href("uactividadesxasignar2.php?idactividad="+document.getElementById("hfidactividad").value+"&elim=1");
        <?php
        }
 
        function btnnuevoClick($sender, $params)
        {
-         if(Derechos('ALACTIVXASIG') == false)
+         if(Derechos('ALACTIVXASIG2') == false)
          	echo '<script language="javascript" type="text/javascript">
             			alert("No puede dar de Alta Actividades por Asignar");
             		</script>';
       	else
-				redirect("uactividadesxasignar.php?idactividad=0");
+				redirect("uactividadesxasignar2.php?idactividad=0");
        }
 
 
-       function uactividadesxasignarvistaShow($sender, $params)
+       function uactividadesxasignarvista2Show($sender, $params)
        {
          $this->pbotones->Width = $_SESSION["width"];
          $this->lbtitulo->Caption= $this->Caption;
        }
 
-       function uactividadesxasignarvistaCreate($sender, $params)
+       function uactividadesxasignarvista2Create($sender, $params)
        {
-         if(Derechos('ACCACTIVXASIG') == false)
+         if(Derechos('ACCACTIVXASIG2') == false)
          {
             echo '<script language="javascript" type="text/javascript">
                   alert("Usted no tiene derechos para Accesar Actividades por Asignar");
@@ -167,8 +167,8 @@ class uactividadesxasignarvista extends Page
          ' left join actividadesasuntos cla on cla.idasunto=a.idasunto
 			  left join clasificaciones clas on clas.idclasificacion=a.idestatus';
 
-        if(Derechos('TODACTIVXASIG')==true)                          //promotores
-            $sql=$sql.' where a.idvendedor>0 and u.idpuesto = 24 '.
+        if(Derechos('TODACTIVXASIG2')==true)                     //asesores comerciales
+            $sql=$sql.' where a.idvendedor>0 and u.idpuesto = 29 '.
                   $cond.' order by idactividad desc';
          else
             $sql=$sql.' where login="'.$_SESSION["login"].'" and u.idpuesto = ' . $_GET["idpuesto"] .
@@ -235,7 +235,7 @@ class uactividadesxasignarvista extends Page
        {
        ?>
        //Add your javascript code here
-          document.location.href("uactividadesxasignar.php?idactividad="+document.getElementById("hfidactividad").value);
+          document.location.href("uactividadesxasignar2.php?idactividad="+document.getElementById("hfidactividad").value);
        <?php
 
        }
@@ -247,7 +247,7 @@ class uactividadesxasignarvista extends Page
        ?>
          var model=gridactividad.getTableModel();
          var row=gridactividad.getFocusedRow();
-         document.uactividadesxasignarvista.hfidactividad.value =model.getValue(0, row);
+         document.uactividadesxasignarvista2.hfidactividad.value =model.getValue(0, row);
        <?php
 
        }
@@ -256,15 +256,15 @@ class uactividadesxasignarvista extends Page
 
 global $application;
 
-global $uactividadesxasignarvista;
+global $uactividadesxasignarvista2;
 
 //Creates the form
-$uactividadesxasignarvista=new uactividadesxasignarvista($application);
+$uactividadesxasignarvista2=new uactividadesxasignarvista2($application);
 
 //Read from resource file
-$uactividadesxasignarvista->loadResource(__FILE__);
+$uactividadesxasignarvista2->loadResource(__FILE__);
 
 //Shows the form
-$uactividadesxasignarvista->show();
+$uactividadesxasignarvista2->show();
 
 ?>

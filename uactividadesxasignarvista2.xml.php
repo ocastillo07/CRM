@@ -1,16 +1,16 @@
 <?php
-<object class="uactividadesxasignarvista" name="uactividadesxasignarvista" baseclass="page">
+<object class="uactividadesxasignarvista2" name="uactividadesxasignarvista2" baseclass="page">
   <property name="Background"></property>
-  <property name="Caption">Act. por Asignar a Promotor</property>
+  <property name="Caption">Act. por Asignar a Asesor</property>
   <property name="Color">#C0C0C0</property>
   <property name="DocType">dtNone</property>
   <property name="Height">648</property>
   <property name="IsMaster">0</property>
-  <property name="Name">uactividadesxasignarvista</property>
+  <property name="Name">uactividadesxasignarvista2</property>
   <property name="Width">800</property>
-  <property name="OnCreate">uactividadesxasignarvistaCreate</property>
-  <property name="OnShow">uactividadesxasignarvistaShow</property>
-  <property name="jsOnLoad">uactividadesxasignarvistaJSLoad</property>
+  <property name="OnCreate">uactividadesxasignarvista2Create</property>
+  <property name="OnShow">uactividadesxasignarvista2Show</property>
+  <property name="jsOnLoad">uactividadesxasignarvista2JSLoad</property>
   <object class="Panel" name="pbotones" >
     <property name="Background">imagenes/bar2.png</property>
     <property name="Dynamic"></property>
