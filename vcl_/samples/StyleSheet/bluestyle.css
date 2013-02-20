@@ -1,0 +1,32 @@
+form {
+  border : 1px solid #000;
+  padding : 5px;
+}
+input.submit {
+background-color : #c00;
+color : #00f;
+font : bold 14px/14px verdana, geneva, helvetica;
+border : 2px solid #ccc;
+}
+
+div {
+background-color : #00f;
+color : #ccc;
+font : bold 14px/14px verdana, geneva, helvetica;
+border : 2px solid #abc;
+}
+
+.bright {
+color : #c00;
+font : bold 12px/12px verdana, geneva, helvetica;
+}
+input.bright {
+border : 1px solid #c00;
+}
+.faded {
+color : #ccc;
+font : normal 12px/12px verdana, geneva, helvetica;
+}
+input.faded {
+border : 1px solid #ccc;
+}

@@ -1,0 +1,1 @@
+This sample shows how you can use CSS styles to change component appearance

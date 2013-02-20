@@ -1,0 +1,7 @@
+Components For PHP Full CodeGear Edition 1.0.0.51
+------------------------------------------------------------------
+
+This installation of Components For PHP Full is version:
+
+1.0.0.51
+

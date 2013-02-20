@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="presupuesto" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/var/www/html/Sites/crm/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idpresupuesto" class="java.lang.Integer"/>
+	<parameter name="idrevision" class="java.lang.Integer"/>
+	<parameter name="partes" class="java.lang.Integer"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select p.idpresupuesto, p.idcliente, if(c.rsocial is null or c.rsocial='', concat(c.nombre,' ',c.apaterno,' ',c.amaterno),c.rsocial) as cliente, c.municipio, c.estado,
+concat(u.nombre,' ',u.apaterno,' ',u.amaterno) as promotor,fechacreacion, p.atencion,
+round(sum(de.importe),2) as subtotal
+from represupuestos p
+left join represupuestosdet de on de.idpresupuesto=p.idpresupuesto and de.idrevision=p.idrevision
+left join clientesgds c on c.idcliente=p.idcliente
+left join usuarios u on u.idusuario= p.idpromotor
+where p.idpresupuesto=$P{idpresupuesto} and p.idrevision=$P{idrevision}]]>
+	</queryString>
+	<field name="idpresupuesto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idcliente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="municipio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="estado" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="promotor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechacreacion" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="atencion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="subtotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="87" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="69" width="572" height="17" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESUPUESTO DE REFACCIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="0" width="356" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Franklin Gothic Demi" size="14" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA SA DE CV]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="23" y="0" width="75" height="67"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"logopre.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="124" y="20" width="356" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Calzada Ciudad del Sol 2200, Col Wisteria, Mexicali BC 21147 (686) 9046410]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="46" width="356" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Av Reforma 126, Col Acapulco, Ensenada BC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="33" width="356" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Calle 3 Oriente 126, Otay Industrial, Tijuana BC 23390 (664) 9794410]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="91" splitType="Stretch">
+			<textField>
+				<reportElement x="458" y="0" width="52" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{idpresupuesto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="61" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="13" width="198" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="26" width="198" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{municipio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="39" width="198" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="76" width="198" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{promotor}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="458" y="13" width="52" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechacreacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="57" width="198" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{atencion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="18" y="0" width="52" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="57" width="26" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATT:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="82" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESUPUESTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="13" width="41" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="76" width="68" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROMOTOR:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<subreport>
+				<reportElement x="8" y="0" width="502" height="125"/>
+				<subreportParameter name="idrevision">
+					<subreportParameterExpression><![CDATA[$P{idrevision}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="idpresupuesto">
+					<subreportParameterExpression><![CDATA[$P{idpresupuesto}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="partes">
+					<subreportParameterExpression><![CDATA[$P{partes}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{relativepath}+"presupuesto_detalle.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="219" splitType="Stretch">
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="452" y="16" width="58" height="13"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{subtotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="68" width="309" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[*PRECIOS SIN IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="42" width="309" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[*PEDIDO ESPECIAL REQUIERE 50% DE ANTICIPO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="16" width="66" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUBTOTAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="55" width="309" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[*PRECIO SUJETO A CAMBIO SIN PREVIO AVISO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="82" width="572" height="17" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISTRIBUIDOR AUTORIZADO]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="2" y="99" width="570" height="117"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"banner.gif"]]></imageExpression>
+			</image>
+		</band>
+	</columnFooter>
+</jasperReport>

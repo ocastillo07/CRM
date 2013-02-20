@@ -1,0 +1,17 @@
+[OpenFiles]
+Module1=Readme.txt
+Module2=querysampleib.php
+[Readme.txt]
+Line=0
+Position=0
+[C:\development\internal\vcl4phpwebsite\samples\Data Aware\QuerySampleInterBase\Readme.txt]
+BreakpointCount=0
+[querysampleib.php]
+Line=0
+Position=0
+[C:\development\internal\vcl4phpwebsite\samples\Data Aware\QuerySampleInterBase\querysampleib.php]
+BreakpointCount=0
+[Watches]
+Watchcount=0
+[Status]
+OpenModule=querysampleib.php

@@ -1,0 +1,91 @@
+﻿/*********************************************************************************/
+/*                   JomiTech Components For PHP Stylesheet                      */
+/*               Copyright © JomiTech 2007. All Rights Reserved.                 */
+/*********************************************************************************/
+@import "sitethemestyles.css";
+
+.jtmenudivider
+{
+  background: #C1C1C1;
+  height: 1px;
+  margin: 5px 0 5px 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.jtmenuitem
+{
+  color: #515050;
+  cursor: default;
+  font-size: 9pt;
+  height: 18px;
+  list-style-type: none;
+  margin-bottom: 3px;
+  margin-top: 3px;
+  padding-top: 1px;
+  width: 230px;
+}
+
+.jtmenuitem_over
+{
+  background: #EEEDED;
+}
+
+.jtmenuitem a
+{
+  text-decoration: none;
+}
+
+.jtmenuitem_over a
+{
+}
+
+.jtmenu
+{
+  background: white;
+  border: solid 1px #C1C1C1;
+  margin: 0;
+  padding-bottom: 4px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 4px;
+  position: absolute;
+  visibility: hidden;
+  width: auto;
+  z-index: 200;
+}
+
+.jtmenubar
+{
+  background: white;
+  border: solid 1px #C1C1C1;
+  height: 29px;
+  overflow: hidden;
+  padding: 1px;
+}
+
+.jtmenubarinner
+{
+  background: url(images/menu_back.gif);
+  height: 100%;
+  width: 100%;
+}
+
+.jtmenubarbutton
+{
+  border: solid 1px #C1C1C1;
+  color: #515050;
+  cursor: default;
+  float: left;
+  font-size: 10pt;
+  margin-right: 2px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 4px;
+  padding-top: 3px;
+}
+
+.jtmenubarbutton_over
+{
+  background: white;
+}

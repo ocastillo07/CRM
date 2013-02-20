@@ -1,0 +1,108 @@
+/*********************************************************************************/
+/*                   JomiTech Components For PHP Stylesheet                      */
+/*               Copyright © JomiTech 2007. All Rights Reserved.                 */
+/*********************************************************************************/
+@import "sitethemestyles.css";
+
+.jtgroupbox
+{
+  padding-top: 7px;
+  overflow: hidden;
+}
+
+.jtgroupboxborder
+{
+  background: #9EB9D4;
+  overflow: hidden;
+  position: absolute;
+}
+
+.jtgroupboxborder_l
+{
+  height: 100%;
+  left: 0;
+  top: 6px;
+  width: 1px;
+}
+
+.jtgroupboxborder_t
+{
+  height: 1px;
+  left: 6px;
+  top: 0;
+  width: 100%;
+}
+
+.jtgroupboxborder_r
+{
+  height: 100%;
+  right: 0;
+  top: 6px;
+  width: 1px;
+}
+
+.jtgroupboxborder_b
+{
+  height: 1px;
+  left: 6px;
+  bottom: 0;
+  width: 100%;
+}
+
+.jtgroupboxcorner
+{
+  height: 6px;
+  overflow: hidden;
+  position: absolute;
+  width: 6px;
+}
+
+.jtgroupboxcorner_tl
+{
+  background: url(images/bevel_tl.gif);
+  left: 0;
+  top: 0;
+}
+
+.jtgroupboxcorner_tr
+{
+  background: url(images/bevel_tr.gif);
+  right: 0;
+  top: 0;
+}
+
+.jtgroupboxcorner_bl
+{
+  background: url(images/bevel_bl.gif);
+  bottom: 0;
+  left: 0;
+}
+
+.jtgroupboxcorner_br
+{
+  background: url(images/bevel_br.gif);
+  right: 0;
+  bottom: 0;
+}
+
+.jtgroupboxcontents
+{
+  background: white;
+  padding: 6px;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.jtgroupboxcaption
+{
+  background: white;
+  color: #2F455B;
+  font-size: 8pt;
+  left: 8px;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}

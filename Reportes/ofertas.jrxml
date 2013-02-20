@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ofertas" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="idoferta" class="java.lang.Integer"/>
+	<parameter name="idrevision" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Oscar\\Proyectos\\Web\\crm\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select o.idoferta,(select concat(direccion," No ",numero," Col. ",colonia," ",
+ciudad," B.C."," CP ",cp," Tel. ",telefono )as direccion from plazas where idplaza=1) as dir1,
+(select concat(direccion," No ",numero," Col. ",colonia," ",ciudad,
+" B.C."," CP ",cp," Tel. ",telefono )as direccion from plazas where idplaza=2) as dir2,
+p.nombre as plaza, p.rsocial,
+if(c.rsocial is NULL or c.rsocial="", if(c.apaterno is NULL or c.apaterno="", 
+c.nombre, if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ", c.apaterno), 
+concat(c.nombre, " ", c.apaterno, " ", c.amaterno))), c.rsocial)  as cliente, 
+concat(c.direccion," ",c.numero) as dircliente, concat("Col. ",c.colonia," CP",c.cp) as colonia, 
+concat(c.municipio,", ",c.estado) as ciudad,c.telefono,
+concat(u.nombre," ",u.apaterno," ",u.amaterno) as vendedor,
+concat(con.nombre," ",con.apaterno," ",con.amaterno) as contacto,
+ct.nombre as descripcion, o.ano, color,pro.clave as modelo, motor, transmision,embrage,
+ejedelantero,ejetrasero,suspensiondelantera,suspensiontrasera,camarote,bastidor,frenos,llantas,
+acondicionamiento,tanquescombustible,sistemadireccion,fechacreacion,  specEspeciales,  
+concat("$",format(precio,2)) as precioventa, concat("$",format(descuento,2)) as descuento,
+concat("$",format(precio-descuento,2)) as preciototal,tiempoentrega,m.iniciales as moneda
+from ofertas o 
+left join clientes c on c.idcliente=o.idcliente
+left join plazas p on p.idplaza=o.idplaza
+left join camionestipos ct  on ct.idtipo=o.idtipocamion
+left join clasificaciones cl on cl.idclasificacion= o.idestatus
+left join ofertasfases f on f.idfase=o.idfase
+left join usuarios u on u.idusuario=o.idvendedor
+left join contactos con on con.idcontacto=c.idcontacto and nivel=1
+left join productos pro on pro.clave=o.modelo
+left join productosdet pd on pd.idproducto=pro.idproducto
+left join monedas m on m.idmoneda=o.moneda
+where o.idoferta= $P{idoferta} and idrevision= $P{idrevision}]]>
+	</queryString>
+	<field name="dir1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dir2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plaza" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="rsocial" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dircliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="colonia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ciudad" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vendedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="contacto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ano" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="color" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="modelo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="motor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="transmision" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="embrage" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ejedelantero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ejetrasero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="suspensiondelantera" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="suspensiontrasera" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="camarote" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bastidor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="frenos" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="llantas" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="acondicionamiento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tanquescombustible" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sistemadireccion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechacreacion" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="specEspeciales" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tiempoentrega" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idoferta" class="java.lang.Integer"/>
+	<field name="descuento" class="java.lang.String"/>
+	<field name="preciototal" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="84">
+			<staticText>
+				<reportElement x="111" y="21" width="416" height="23"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[NUESTRA POLITICA DE CALIDAD: "Ofrecer seguridad a nuestros clientes, mediante procesos de calidad, que mantendrán su carga en movimiento".]]></text>
+			</staticText>
+			<image scaleImage="RetainShape">
+				<reportElement x="0" y="-1" width="80" height="84"/>
+				<imageExpression class="java.lang.String"><![CDATA["international.gif"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="688">
+			<textField>
+				<reportElement x="111" y="-27" width="416" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dir1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="111" y="-14" width="416" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dir2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="327" y="13" width="46" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plaza:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="403" y="13" width="81" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{plaza}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="111" y="-80" width="416" height="16"/>
+				<textElement textAlignment="Center">
+					<font fontName="Franklin Gothic Demi" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{rsocial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="85" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Preparado para:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="0" width="238" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="327" y="40" width="46" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="85" y="14" width="238" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dircliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="327" y="27" width="58" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cotizacion:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="85" y="27" width="238" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{colonia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="85" y="40" width="238" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ciudad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="85" y="53" width="238" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="327" y="0" width="76" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Realizado por:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="403" y="0" width="147" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="327" y="53" width="48" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contacto:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="403" y="53" width="146" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{contacto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="108" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="108" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="121" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AÑO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="121" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="134" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COLOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="134" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{color}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="148" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MODELO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="148" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="161" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MOTOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="161" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{motor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="175" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TRANSMISION]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="175" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transmision}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="189" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMBRAGUE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="189" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{embrage}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="203" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EJE DELANTERO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="203" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ejedelantero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="217" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EJE (S) TRASERO (S)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="217" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ejetrasero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="231" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUSPENSION DELANTERA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="231" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{suspensiondelantera}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="244" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUSPENSION TRASERA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="244" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{suspensiontrasera}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="257" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CABINA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="257" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{camarote}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="271" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BASTIDOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="271" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bastidor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="284" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FRENOS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="284" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{frenos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="298" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUEDAS/LLANTAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="298" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{llantas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="312" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACONDICIONAMIENTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="312" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{acondicionamiento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="327" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TANQUES COMBUSTIBLE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="327" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tanquescombustible}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="341" width="139" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISTEMA DIRECCION]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="341" width="345" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sistemadireccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="354" width="144" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONFIGURACION ESPECIAL:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="16" y="424" width="511" height="34"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{specEspeciales}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="488" width="42" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="72" y="464" width="79" height="13"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{precioVenta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="181" y="509" width="244" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[semanas a partir de la fecha del pedido.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="509" width="144" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Tiempo de entrega de la unidad:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="162" y="509" width="14" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tiempoentrega}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="403" y="39" width="79" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="403" y="26" width="33" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{idoferta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="68" width="555" height="22"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Gracias por elegir un producto de calidad con International, recordandole que somos la marca más vendida de Norteamérica y con la red de distribucion más grande de México. Atendiendo su solicitud, enseguida presentamos para su amable consideracion nuestra siguiente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="91" width="555" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COTIZACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="181" y="488" width="334" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Debiendose agregar el impuesto al valor agregado (IVA)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="537" width="100" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atentamente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="537" width="100" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aceptado Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="606" width="511" height="82"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[TERMINOS Y CONDICIONES
+1.- Cotización válida por 30 días naturales y sujeta a cambio sin previo aviso.
+2.- Para efectos de facturación en pesos, se utilizará el tipo de cambio DOF del día mas 10 centavos.
+3.- Para apartar o enviar a producción, se requiere anticipo de $5,000 dólares por vehiculo y firma de aceptado.
+4.- Precio no incluye seguro, placas ni tenencia y su lugar de entrega es LAB en instalaciones del proveedor.
+5.- Precio no incluye gastos de entrega de $150 dólares.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="16" y="575" width="194" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="16" y="588" width="216" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{rsocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="260" y="577" width="234" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="289" y="575" width="183" height="1"/>
+			</line>
+			<line>
+				<reportElement x="28" y="574" width="169" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="72" y="476" width="79" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descuento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="72" y="488" width="79" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{preciototal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="464" width="42" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="476" width="49" height="13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Descuento]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="488" width="21" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="155" y="351" width="338" height="70"/>
+				<subreportParameter name="idoferta">
+					<subreportParameterExpression><![CDATA[$P{idoferta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "ofertas_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,12 @@
+[OpenFiles]
+Module1=Readme.txt
+[Readme.txt]
+Line=0
+Position=0
+[C:\development\internal\vcl4phpwebsite\samples\MapShape\Readme.txt]
+BreakpointCount=0
+[Watches]
+Watchcount=1
+Watch0=$hint
+[Status]
+OpenModule=Readme.txt

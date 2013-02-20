@@ -1,0 +1,29 @@
+[OpenFiles]
+Module1=dmconexion.php
+Module2=uactividadesxasignar.php
+Module3=uactividadesxasignarvista.php
+Module4=uactividades.php
+[dmconexion.php]
+Line=0
+Position=0
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\dmconexion.php]
+BreakpointCount=0
+[uactividadesxasignar.php]
+Line=10
+Position=42
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignar.php]
+BreakpointCount=0
+[uactividadesxasignarvista.php]
+Line=104
+Position=7
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignarvista.php]
+BreakpointCount=0
+[uactividades.php]
+Line=0
+Position=0
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividades.php]
+BreakpointCount=0
+[Watches]
+Watchcount=0
+[Status]
+OpenModule=uactividadesxasignar.php
