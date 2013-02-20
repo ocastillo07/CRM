@@ -827,17 +827,18 @@ class uclientes extends Page
 
    function TraeGrupos()
    {
-      $rsm = "SELECT g.idclasificacion as id, g.nombre, if(cg.idcliente is not null, 1,0) as ch,
-            concat(cg.usuario, ' ', cg.fecha) as uf FROM clasificaciones AS g
-            left Join clientesgrupos cg on cg.idgrupo = g.idclasificacion and idcliente = " . $this->edidcliente->Text . "
-            where g.idtipo = 9 ";
+      $rsm = "SELECT g.idgrupo as id, g.nombre, if(cg.idcliente is not null, 1,0) as ch,
+              concat(cg.usuario, ' ', cg.fecha) as uf
+              FROM clientesgruposcat AS g
+              left Join clientesgrupos cg on
+              cg.idgrupo = g.idgrupo and idcliente = " . $this->edidcliente->Text;
       $this->sqlgen->close();
       $this->sqlgen->sql = $rsm;
       $this->sqlgen->open();
       $t = '<table width="120" border="0" cellpadding="0" cellspacing="0" align="center">';
       while(!$this->sqlgen->EOF == true)
       {
-         $this->lblufhgrupos->Caption = $this->sqlgen->fieldget('nombre'); //$row[2];
+         $this->lblufhgrupos->Caption = $this->sqlgen->fieldget('uf'); //$row[2];
          if($this->sqlgen->fieldget('ch') == 1)
             $ch = 'checked="checked"';
          else

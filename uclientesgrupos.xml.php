@@ -1,14 +1,14 @@
 <?php
-<object class="uclientesgrupos2" name="uclientesgrupos2" baseclass="page">
+<object class="uclientesgrupos" name="uclientesgrupos" baseclass="page">
   <property name="Background"></property>
   <property name="Caption">Clientes Grupos</property>
   <property name="Color">#C0C0C0</property>
   <property name="DocType">dtNone</property>
   <property name="Height">344</property>
   <property name="IsMaster">0</property>
-  <property name="Name">uclientesgrupos2</property>
+  <property name="Name">uclientesgrupos</property>
   <property name="Width">800</property>
-  <property name="OnShow">uclientesgrupos2Show</property>
+  <property name="OnShow">uclientesgruposShow</property>
   <object class="Panel" name="pbotones" >
     <property name="Background">imagenes/bar2.png</property>
     <property name="Dynamic"></property>
@@ -112,10 +112,10 @@
       <property name="Top">146</property>
       <property name="Width">583</property>
     </object>
-    <object class="Edit" name="edidasunto" >
+    <object class="Edit" name="edidgrupo" >
       <property name="Height">21</property>
       <property name="Left">13</property>
-      <property name="Name">edidasunto</property>
+      <property name="Name">edidgrupo</property>
       <property name="ParentColor">0</property>
       <property name="ReadOnly">1</property>
       <property name="Top">48</property>
@@ -152,7 +152,6 @@
     <property name="MasterSource"></property>
     <property name="Name">tblclientesgrupos</property>
     <property name="TableName">clientesgruposcat</property>
-    <property name="OnAfterCancel">tblclientesgruposAfterCancel</property>
   </object>
 </object>
 ?>

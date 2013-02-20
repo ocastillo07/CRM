@@ -111,7 +111,7 @@ class uclientesgruposvista extends Page
 				</script>';
 			}
 			else
-				redirect("uclientesgrupos2.php?idgrupo=0");
+				redirect("uclientesgrupos.php?idgrupo=0");
        }
 
        function dgclientesgruposJSDblClick($sender, $params)

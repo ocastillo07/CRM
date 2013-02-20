@@ -16,7 +16,7 @@ use_unit("extctrls.inc.php");
 use_unit("stdctrls.inc.php");
 
 //Class definition
-class uAsuntos extends Page
+class uclientesgrupos extends Page
 {
    public $tblclientesgrupos = null;
    public $edidgrupo = null;
@@ -32,6 +32,8 @@ class uAsuntos extends Page
    public $Panel2 = null;
    public $sqlgen = null;
    public $hfestatus = null;
+
+
    function edregresarClick($sender, $params)
    {
       redirect("uclientesgruposvista.php");
@@ -46,7 +48,7 @@ class uAsuntos extends Page
    function btnguardarClick($sender, $params)
    {
       $this->Guardar();
-      #redirect("uasuntos.php?idasunto=" . $this->edidgrupo->Text);
+      redirect("uclientesgrupos.php?idgrupo=" . $this->edidgrupo->Text);
    }
 
    function uclientesgruposShow($sender, $params)
@@ -102,7 +104,7 @@ class uAsuntos extends Page
       if($this->hfestatus->Value == 1)
       {
          $this->sqlgen->close();
-         $this->sqlgen->sql = "Select ifnull(max(idgrupo), 0)+1 as id from clientesgruposcat ";
+         $this->sqlgen->sql = "Select max(idgrupo)+1 as id from clientesgruposcat ";
          $this->sqlgen->open();
          $this->edidgrupo->Text = $this->sqlgen->fieldget("id");
       }
@@ -132,7 +134,7 @@ class uAsuntos extends Page
    {
       if(!isset($_GET["idgrupo"]))
       {
-         if($this->hfestatus->Value == 1)
+         if($this->hfestatus->Value == 1)   //alta
          {
             $this->tblclientesgrupos->open();
             $this->tblclientesgrupos->insert();
@@ -140,7 +142,7 @@ class uAsuntos extends Page
             $msg = "Inserto el Grupo no. " . $this->edidgrupo->Text . " " . $this->ednombre->Text;
 				$ban=true;
          }
-         else
+         else  //modificacion
          {
             if(Derechos('EDCLIGPOS') == false)
             {
@@ -189,15 +191,15 @@ class uAsuntos extends Page
 
 global $application;
 
-global $uclientesgrupos2;
+global $uclientesgrupos;
 
 //Creates the form
-$uclientesgrupos2=new uclientesgrupos2($application);
+$uclientesgrupos=new uclientesgrupos($application);
 
 //Read from resource file
-$uclientesgrupos2->loadResource(__FILE__);
+$uclientesgrupos->loadResource(__FILE__);
 
 //Shows the form
-$uclientesgrupos2->show();
+$uclientesgrupos->show();
 
 ?>
