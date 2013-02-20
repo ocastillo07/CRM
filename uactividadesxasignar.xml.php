@@ -1,7 +1,7 @@
 <?php
 <object class="uactividadesxasignar" name="uactividadesxasignar" baseclass="page">
   <property name="Background"></property>
-  <property name="Caption">Actividades por Asignar</property>
+  <property name="Caption">Act. por Asignar a Promotor</property>
   <property name="Color">#C0C0C0</property>
   <property name="DocType">dtNone</property>
   <property name="Height">488</property>

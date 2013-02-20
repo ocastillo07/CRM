@@ -329,6 +329,7 @@
     <property name="Items">a:0:{}</property>
     <property name="Left">108</property>
     <property name="Name">cboestatus</property>
+    <property name="ParentColor">0</property>
     <property name="Top">325</property>
     <property name="Width">186</property>
   </object>

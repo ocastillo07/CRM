@@ -310,7 +310,7 @@ class uactividadesxasignar2 extends Page
          //promotores
          $this->cbasesor->Clear();
          $sql = 'select idusuario,concat(u.nombre," ",u.apaterno," ",u.amaterno) as promotor
-					from usuarios u where idpuesto = 24';
+					from usuarios u where idpuesto = 29';
          $rs = mysql_query($sql)or die('Error SQL: ' . $sql);
          $this->cbasesor->AddItem('Sin Asignar', null , 0);
          while($row = mysql_fetch_array($rs))
