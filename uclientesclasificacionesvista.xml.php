@@ -1,16 +1,16 @@
 <?php
-<object class="uasuntosvista" name="uasuntosvista" baseclass="page">
+<object class="uclientesclasificacionesvista" name="uclientesclasificacionesvista" baseclass="page">
   <property name="Background"></property>
-  <property name="Caption">Vista Asuntos</property>
+  <property name="Caption">Vista Clientes Clasificaciones</property>
   <property name="Color">#C0C0C0</property>
   <property name="DocType">dtNone</property>
   <property name="Height">544</property>
   <property name="IsMaster">0</property>
-  <property name="Name">uasuntosvista</property>
+  <property name="Name">uclientesclasificacionesvista</property>
   <property name="Width">800</property>
-  <property name="OnCreate">uasuntosvistaCreate</property>
-  <property name="OnShow">uasuntosvistaShow</property>
-  <property name="jsOnLoad">uasuntosvistaJSLoad</property>
+  <property name="OnCreate">uclientesclasificacionesvistaCreate</property>
+  <property name="OnShow">uclientesclasificacionesvistaShow</property>
+  <property name="jsOnLoad">uclientesclasificacionesvistaJSLoad</property>
   <object class="Panel" name="pbotones" >
     <property name="Background">imagenes/bar2.png</property>
     <property name="Height">48</property>
@@ -63,16 +63,16 @@
       <property name="Width">123</property>
     </object>
   </object>
-  <object class="DBGrid" name="dgasuntos" >
-    <property name="Columns"><![CDATA[a:2:{i:0;a:14:{s:9:&quot;Alignment&quot;;s:14:&quot;taRightJustify&quot;;s:11:&quot;ButtonStyle&quot;;s:6:&quot;bsAuto&quot;;s:7:&quot;Caption&quot;;s:8:&quot;IdAsunto&quot;;s:5:&quot;Color&quot;;s:0:&quot;&quot;;s:9:&quot;Fieldname&quot;;s:8:&quot;IdAsunto&quot;;s:9:&quot;FontColor&quot;;s:0:&quot;&quot;;s:12:&quot;DropDownRows&quot;;s:1:&quot;7&quot;;s:8:&quot;PickList&quot;;s:0:&quot;&quot;;s:8:&quot;ReadOnly&quot;;s:5:&quot;false&quot;;s:8:&quot;SortType&quot;;s:9:&quot;stNumeric&quot;;s:14:&quot;TitleAlignment&quot;;s:13:&quot;taLeftJustify&quot;;s:10:&quot;TitleColor&quot;;s:0:&quot;&quot;;s:7:&quot;Visible&quot;;s:4:&quot;true&quot;;s:5:&quot;Width&quot;;s:3:&quot;100&quot;;}i:1;a:14:{s:9:&quot;Alignment&quot;;s:13:&quot;taLeftJustify&quot;;s:11:&quot;ButtonStyle&quot;;s:6:&quot;bsAuto&quot;;s:7:&quot;Caption&quot;;s:6:&quot;Asunto&quot;;s:5:&quot;Color&quot;;s:0:&quot;&quot;;s:9:&quot;Fieldname&quot;;s:6:&quot;Asunto&quot;;s:9:&quot;FontColor&quot;;s:0:&quot;&quot;;s:12:&quot;DropDownRows&quot;;s:1:&quot;7&quot;;s:8:&quot;PickList&quot;;s:0:&quot;&quot;;s:8:&quot;ReadOnly&quot;;s:5:&quot;false&quot;;s:8:&quot;SortType&quot;;s:8:&quot;stString&quot;;s:14:&quot;TitleAlignment&quot;;s:13:&quot;taLeftJustify&quot;;s:10:&quot;TitleColor&quot;;s:0:&quot;&quot;;s:7:&quot;Visible&quot;;s:4:&quot;true&quot;;s:5:&quot;Width&quot;;s:3:&quot;300&quot;;}}]]></property>
-    <property name="DataSource">dsasuntos</property>
+  <object class="DBGrid" name="dgclientesclasificaciones" >
+    <property name="Columns"><![CDATA[a:2:{i:0;a:14:{s:9:&quot;Alignment&quot;;s:14:&quot;taRightJustify&quot;;s:11:&quot;ButtonStyle&quot;;s:6:&quot;bsAuto&quot;;s:7:&quot;Caption&quot;;s:15:&quot;IdClasificacion&quot;;s:5:&quot;Color&quot;;s:0:&quot;&quot;;s:9:&quot;Fieldname&quot;;s:22:&quot;idclienteclasificacion&quot;;s:9:&quot;FontColor&quot;;s:0:&quot;&quot;;s:12:&quot;DropDownRows&quot;;s:1:&quot;7&quot;;s:8:&quot;PickList&quot;;s:0:&quot;&quot;;s:8:&quot;ReadOnly&quot;;s:5:&quot;false&quot;;s:8:&quot;SortType&quot;;s:9:&quot;stNumeric&quot;;s:14:&quot;TitleAlignment&quot;;s:13:&quot;taLeftJustify&quot;;s:10:&quot;TitleColor&quot;;s:0:&quot;&quot;;s:7:&quot;Visible&quot;;s:4:&quot;true&quot;;s:5:&quot;Width&quot;;s:3:&quot;100&quot;;}i:1;a:14:{s:9:&quot;Alignment&quot;;s:13:&quot;taLeftJustify&quot;;s:11:&quot;ButtonStyle&quot;;s:6:&quot;bsAuto&quot;;s:7:&quot;Caption&quot;;s:13:&quot;Clasificacion&quot;;s:5:&quot;Color&quot;;s:0:&quot;&quot;;s:9:&quot;Fieldname&quot;;s:6:&quot;nombre&quot;;s:9:&quot;FontColor&quot;;s:0:&quot;&quot;;s:12:&quot;DropDownRows&quot;;s:1:&quot;7&quot;;s:8:&quot;PickList&quot;;s:0:&quot;&quot;;s:8:&quot;ReadOnly&quot;;s:5:&quot;false&quot;;s:8:&quot;SortType&quot;;s:8:&quot;stString&quot;;s:14:&quot;TitleAlignment&quot;;s:13:&quot;taLeftJustify&quot;;s:10:&quot;TitleColor&quot;;s:0:&quot;&quot;;s:7:&quot;Visible&quot;;s:4:&quot;true&quot;;s:5:&quot;Width&quot;;s:3:&quot;300&quot;;}}]]></property>
+    <property name="DataSource">dsclientesclasificaciones</property>
     <property name="Height">432</property>
     <property name="Left">5</property>
-    <property name="Name">dgasuntos</property>
+    <property name="Name">dgclientesclasificaciones</property>
     <property name="ReadOnly">1</property>
     <property name="Top">94</property>
     <property name="Width">788</property>
-    <property name="jsOnDblClick">dgasuntosJSDblClick</property>
+    <property name="jsOnDblClick">dgclientesclasificacionesJSDblClick</property>
     <property name="jsOnRowChanged"></property>
     <property name="jsOnRowSaved"></property>
   </object>
@@ -113,21 +113,21 @@
     <property name="Width">55</property>
     <property name="OnClick">btnbuscarClick</property>
   </object>
-  <object class="MySQLQuery" name="sqlasuntos" >
+  <object class="MySQLQuery" name="sqlclientesclasificaciones" >
         <property name="Left">312</property>
         <property name="Top">175</property>
     <property name="Database">dmconexion.conexion</property>
     <property name="LimitCount">-1</property>
     <property name="LimitStart">-1</property>
-    <property name="Name">sqlasuntos</property>
+    <property name="Name">sqlclientesclasificaciones</property>
     <property name="Params">a:0:{}</property>
     <property name="SQL"><![CDATA[a:1:{i:0;s:0:&quot;&quot;;}]]></property>
   </object>
-  <object class="Datasource" name="dsasuntos" >
+  <object class="Datasource" name="dsclientesclasificaciones" >
         <property name="Left">454</property>
         <property name="Top">173</property>
-    <property name="Dataset">sqlasuntos</property>
-    <property name="Name">dsasuntos</property>
+    <property name="Dataset">sqlclientesclasificaciones</property>
+    <property name="Name">dsclientesclasificaciones</property>
   </object>
 </object>
 ?>

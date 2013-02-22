@@ -1,23 +1,23 @@
 [OpenFiles]
 Module1=dmconexion.php
-Module2=uclientesgrupos.php
-Module3=uclientesgruposvista.php
+Module2=uclientesclasificaciones.php
+Module3=uclientesclasificacionesvista.php
 [dmconexion.php]
-Line=0
-Position=0
+Line=13
+Position=45
 [C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\dmconexion.php]
 BreakpointCount=0
-[uclientesgrupos.php]
-Line=50
-Position=44
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesgrupos.php]
+[uclientesclasificaciones.php]
+Line=124
+Position=45
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesclasificaciones.php]
 BreakpointCount=0
-[uclientesgruposvista.php]
-Line=123
-Position=60
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesgruposvista.php]
+[uclientesclasificacionesvista.php]
+Line=35
+Position=7
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesclasificacionesvista.php]
 BreakpointCount=0
 [Watches]
 Watchcount=0
 [Status]
-OpenModule=uclientesgrupos.php
+OpenModule=uclientesclasificaciones.php

@@ -1,14 +1,14 @@
 <?php
-<object class="uasuntos" name="uasuntos" baseclass="page">
+<object class="uclientesclasificaciones" name="uclientesclasificaciones" baseclass="page">
   <property name="Background"></property>
-  <property name="Caption">Asuntos</property>
+  <property name="Caption">Clientes Clasificaciones</property>
   <property name="Color">#C0C0C0</property>
   <property name="DocType">dtNone</property>
   <property name="Height">344</property>
   <property name="IsMaster">0</property>
-  <property name="Name">uasuntos</property>
+  <property name="Name">uclientesclasificaciones</property>
   <property name="Width">800</property>
-  <property name="OnShow">uasuntosShow</property>
+  <property name="OnShow">uclientesclasificacionesShow</property>
   <object class="Panel" name="pbotones" >
     <property name="Background">imagenes/bar2.png</property>
     <property name="Dynamic"></property>
@@ -49,7 +49,7 @@
       <property name="OnClick">btngcerrarClick</property>
     </object>
     <object class="Label" name="lbtitulo" >
-      <property name="Caption"><![CDATA[<FONT color=#004080><STRONG>lbtitulo </STRONG></FONT>]]></property>
+      <property name="Caption"><![CDATA[&lt;FONT color=#004080&gt;&lt;STRONG&gt;lbtitulo &lt;/STRONG&gt;&lt;/FONT&gt;]]></property>
       <property name="Font">
             <property name="Color">#004080</property>
             <property name="Size">12</property>
@@ -84,7 +84,7 @@
     <property name="Top">62</property>
     <property name="Width">781</property>
     <object class="Label" name="Label1" >
-      <property name="Caption">IdAsunto</property>
+      <property name="Caption">IdClasificacion</property>
       <property name="Height">13</property>
       <property name="Left">13</property>
       <property name="Name">Label1</property>
@@ -112,10 +112,10 @@
       <property name="Top">146</property>
       <property name="Width">583</property>
     </object>
-    <object class="Edit" name="edidasunto" >
+    <object class="Edit" name="edidclasificacion" >
       <property name="Height">21</property>
       <property name="Left">13</property>
-      <property name="Name">edidasunto</property>
+      <property name="Name">edidclasificacion</property>
       <property name="ParentColor">0</property>
       <property name="ReadOnly">1</property>
       <property name="Top">48</property>
@@ -142,16 +142,16 @@
     <property name="Params">a:0:{}</property>
     <property name="SQL">a:0:{}</property>
   </object>
-  <object class="MySQLTable" name="tblasuntos" >
+  <object class="MySQLTable" name="tblclientesclasificaciones" >
         <property name="Left">596</property>
         <property name="Top">73</property>
     <property name="Database">dmconexion.conexion</property>
     <property name="LimitCount">-1</property>
     <property name="LimitStart">-1</property>
-    <property name="MasterFields">a:1:{s:13:"idoportunidad";s:1:"0";}</property>
+    <property name="MasterFields"><![CDATA[a:1:{s:13:&quot;idoportunidad&quot;;s:1:&quot;0&quot;;}]]></property>
     <property name="MasterSource"></property>
-    <property name="Name">tblasuntos</property>
-    <property name="TableName">actividadesasuntos</property>
+    <property name="Name">tblclientesclasificaciones</property>
+    <property name="TableName">clientesclasificaciones</property>
   </object>
 </object>
 ?>

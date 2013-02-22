@@ -17,11 +17,11 @@ use_unit("extctrls.inc.php");
 use_unit("stdctrls.inc.php");
 
 //Class definition
-class uasuntosvista extends Page
+class uclientesclasificacionesvista extends Page
 {
-       public $dsasuntos = null;
-       public $sqlasuntos = null;
-       public $dgasuntos = null;
+       public $dgclientesclasificaciones = null;
+       public $dsclientesclasificaciones = null;
+       public $sqlclientesclasificaciones = null;
        public $btnbuscar = null;
        public $cbofiltro = null;
        public $edbuscar = null;
@@ -33,6 +33,7 @@ class uasuntosvista extends Page
        public $hfidus = null;
 
 
+
        function btnbuscarClick($sender, $params)
        {
        	$this->filtro();
@@ -42,45 +43,44 @@ class uasuntosvista extends Page
 
        function filtro()
 		 {
-       	$sql = 'select idasunto as IdAsunto,nombre as Asunto
-					  from actividadesasuntos  ';
+       	$sql = 'Select idclienteclasificacion,nombre from clientesclasificaciones ';
 
 		 	$cond='';
          switch($this->cbofiltro->ItemIndex)
          {
          case 1:  //idprocedimiento
-                  $cond = ' where idasunto= '.$this->edbuscar->Text;
+                  $cond = ' where idclienteclasificacion= '.$this->edbuscar->Text;
 						break;
          case 2:  //procedimiento
                   $cond = ' where nombre like"%'.$this->edbuscar->Text.'%" ';
                   break;
          }
-			$this->sqlasuntos->close();
-			$this->sqlasuntos->SQL= $sql.$cond.' order by idasunto';
-         $this->sqlasuntos->open();
-			//$this->sqlasuntos->Active=true;
+			$this->sqlclientesclasificaciones->close();
+			$this->sqlclientesclasificaciones->SQL= $sql.$cond.' order by idclienteclasificacion';
+         $this->sqlclientesclasificaciones->open();
+			//$this->sqlclientesclasificaciones->Active=true;
 		 }
 
-		 function uasuntosvistaJSLoad($sender, $params)
+		 function uclientesclasificacionesvistaJSLoad($sender, $params)
        {
 
        ?>
        //Add your javascript code here
-         dgasuntos.getTableColumnModel().setColumnWidth(0,120);  //col,width
-			dgasuntos.getTableColumnModel().setColumnWidth(1,450);
-         dgasuntos.getTableColumnModel().setColumnWidth(0,80);  //col,width
-	      dgasuntos.getTableColumnModel().setColumnWidth(1,350);
-         dgasuntos.setWidth(document.body.offsetWidth - 40);
-         dgasuntos.setHeight(document.body.offsetHeight - 150);
+         dgclientesclasificaciones.getTableColumnModel().setColumnWidth(0,120);  //col,width
+			dgclientesclasificaciones.getTableColumnModel().setColumnWidth(1,450);
+         dgclientesclasificaciones.getTableColumnModel().setColumnWidth(0,80);  //col,width
+	      dgclientesclasificaciones.getTableColumnModel().setColumnWidth(1,350);
+         dgclientesclasificaciones.setWidth(document.body.offsetWidth - 40);
+         dgclientesclasificaciones.setHeight(document.body.offsetHeight - 150);
        <?php
        }
 
-       function uasuntosvistaCreate($sender, $params)
+       function uclientesclasificacionesvistaCreate($sender, $params)
        {
-       	if(Derechos('Accesar Asuntos') == false)
+       	if(Derechos('ACCCLICLAS') == false)
          {
          	echo '<script language="javascript" type="text/javascript">
-            	   alert("Usted no tiene derechos para accesar a Asuntos");
+            	   alert("Usted no tiene derechos para accesar a Clientes Clasificaciones");
                	document.location.href("menu.php");
                	</script>';
          	exit;
@@ -92,39 +92,39 @@ class uasuntosvista extends Page
 
        ?>
        //Add your javascript code here
-       	if(!confirm('Desea Eliminar el Asunto Seleccionado?'))
+       	if(!confirm('Desea Eliminar la Clasificacion Seleccionada?'))
             return(false);
-       	var model=dgasuntos.getTableModel();
-       	var row=dgasuntos.getFocusedRow();
-       	document.location.href("uasuntos.php?idasunto="+model.getValue(0, row)+"&elim=1");
+       	var model=dgclientesclasificaciones.getTableModel();
+       	var row=dgclientesclasificaciones.getFocusedRow();
+       	document.location.href("uclientesclasificaciones.php?idclasificacion="+model.getValue(0, row)+"&elim=1");
        <?php
        }
 
 
        function btnnuevoClick($sender, $params)
        {
-       	if(Derechos('Alta Asuntos') == false)
+       	if(Derechos('ALCLICLAS') == false)
          {
 				echo '<script language="javascript" type="text/javascript">
-					alert("No puede Agregar Asuntos");
+					alert("No puede Agregar Clasificaciones");
 				</script>';
 			}
 			else
-				redirect("uasuntos.php?idasunto=0");
+				redirect("uclientesclasificaciones.php?idclasificacion=0");
        }
 
-       function dgasuntosJSDblClick($sender, $params)
+       function dgclientesclasificacionesJSDblClick($sender, $params)
        {
-       	//$this->hfidus->Value = $this->sqlasuntos->fieldget("idasunto");
+       	//$this->hfidus->Value = $this->sqlclientesclasificaciones->fieldget("idasunto");
        ?>
        //Add your javascript code here
-       	var model = dgasuntos.getTableModel();
-       	var row=dgasuntos.getFocusedRow();
-       	document.location.href("uasuntos.php?idasunto="+model.getValue(0, row));
+       	var model = dgclientesclasificaciones.getTableModel();
+       	var row=dgclientesclasificaciones.getFocusedRow();
+       	document.location.href("uclientesclasificaciones.php?idclasificacion="+model.getValue(0, row));
        <?php
        }
 
-       function uasuntosvistaShow($sender, $params)
+       function uclientesclasificacionesvistaShow($sender, $params)
        {
 	    	$this->pbotones->Width = $_SESSION["width"];
    	   $this->lbtitulo->Caption= $this->Caption;
@@ -134,15 +134,15 @@ class uasuntosvista extends Page
 
 global $application;
 
-global $uasuntosvista;
+global $uclientesclasificacionesvista;
 
 //Creates the form
-$uasuntosvista=new uasuntosvista($application);
+$uclientesclasificacionesvista=new uclientesclasificacionesvista($application);
 
 //Read from resource file
-$uasuntosvista->loadResource(__FILE__);
+$uclientesclasificacionesvista->loadResource(__FILE__);
 
 //Shows the form
-$uasuntosvista->show();
+$uclientesclasificacionesvista->show();
 
 ?>
