@@ -2,6 +2,7 @@
 Module1=dmconexion.php
 Module2=uclientesclasificaciones.php
 Module3=uclientesclasificacionesvista.php
+Module4=uclientes.php
 [dmconexion.php]
 Line=13
 Position=45
@@ -17,7 +18,12 @@ Line=35
 Position=7
 [C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesclasificacionesvista.php]
 BreakpointCount=0
+[uclientes.php]
+Line=869
+Position=48
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientes.php]
+BreakpointCount=0
 [Watches]
 Watchcount=0
 [Status]
-OpenModule=uclientesclasificaciones.php
+OpenModule=uclientes.php

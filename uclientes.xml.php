@@ -8,7 +8,7 @@
   <property name="Font">
     <property name="Style">fsNormal</property>
   </property>
-  <property name="Height">552</property>
+  <property name="Height">616</property>
   <property name="IsMaster">0</property>
   <property name="Name">uclientes</property>
   <property name="Width">800</property>
@@ -77,7 +77,7 @@
   <object class="Label" name="Label22" >
     <property name="Caption">Notas</property>
     <property name="Height">13</property>
-    <property name="Left">153</property>
+    <property name="Left">118</property>
     <property name="Name">Label22</property>
     <property name="Top">448</property>
     <property name="Width">75</property>
@@ -129,7 +129,7 @@
         <property name="Weight">bold</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">153</property>
+    <property name="Left">118</property>
     <property name="Name">lblnotas</property>
     <property name="ParentFont">0</property>
     <property name="Top">472</property>
@@ -138,7 +138,7 @@
   </object>
   <object class="HiddenField" name="hfidnota" >
     <property name="Height">18</property>
-    <property name="Left">153</property>
+    <property name="Left">118</property>
     <property name="Name">hfidnota</property>
     <property name="Top">493</property>
     <property name="Value">0</property>
@@ -151,7 +151,7 @@
         <property name="Style">fsNormal</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">419</property>
+    <property name="Left">387</property>
     <property name="Name">lblcamiones</property>
     <property name="Top">498</property>
     <property name="Width">165</property>
@@ -165,7 +165,7 @@
         <property name="Weight">bold</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">419</property>
+    <property name="Left">387</property>
     <property name="Name">lblmodcamiones</property>
     <property name="ParentFont">0</property>
     <property name="Top">462</property>
@@ -610,10 +610,10 @@
     <property name="Caption">...</property>
     <property name="Color">#C0C0C0</property>
     <property name="Height">13</property>
-    <property name="Left">419</property>
+    <property name="Left">387</property>
     <property name="Name">lblparque</property>
     <property name="Top">482</property>
-    <property name="Width">183</property>
+    <property name="Width">166</property>
   </object>
   <object class="Edit" name="edcorreo" >
     <property name="Height">21</property>
@@ -642,9 +642,9 @@
         <property name="Style">fsNormal</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">616</property>
+    <property name="Left">557</property>
     <property name="Name">lblgrupos</property>
-    <property name="Top">496</property>
+    <property name="Top">498</property>
     <property name="Width">165</property>
   </object>
   <object class="Label" name="Label26" >
@@ -656,24 +656,24 @@
         <property name="Weight">bold</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">616</property>
+    <property name="Left">557</property>
     <property name="Name">Label26</property>
     <property name="ParentFont">0</property>
     <property name="Top">462</property>
-    <property name="Width">151</property>
+    <property name="Width">70</property>
   </object>
   <object class="Label" name="lblufhgrupos" >
     <property name="Caption">...</property>
     <property name="Color">#C0C0C0</property>
     <property name="Height">15</property>
-    <property name="Left">616</property>
+    <property name="Left">557</property>
     <property name="Name">lblufhgrupos</property>
     <property name="Top">480</property>
     <property name="Width">103</property>
   </object>
   <object class="HiddenField" name="hfcount" >
     <property name="Height">18</property>
-    <property name="Left">616</property>
+    <property name="Left">557</property>
     <property name="Name">hfcount</property>
     <property name="Top">520</property>
     <property name="Width">72</property>
@@ -794,11 +794,35 @@
   </object>
   <object class="HiddenField" name="hfderechonotas" >
     <property name="Height">18</property>
-    <property name="Left">225</property>
+    <property name="Left">190</property>
     <property name="Name">hfderechonotas</property>
     <property name="Top">493</property>
     <property name="Value">0</property>
     <property name="Width">56</property>
+  </object>
+  <object class="RadioGroup" name="RadioGroup1" >
+    <property name="Color">#C0C0C0</property>
+    <property name="Height">89</property>
+    <property name="Items"><![CDATA[a:5:{i:0;s:1:&quot;A&quot;;i:1;s:1:&quot;B&quot;;i:2;s:1:&quot;C&quot;;i:3;s:1:&quot;D&quot;;i:4;s:1:&quot;E&quot;;}]]></property>
+    <property name="Left">730</property>
+    <property name="Name">RadioGroup1</property>
+    <property name="Top">480</property>
+    <property name="Width">68</property>
+  </object>
+  <object class="Label" name="Label21" >
+    <property name="Caption">Clasificacion</property>
+    <property name="Color">#C0C0C0</property>
+    <property name="Cursor">crText</property>
+    <property name="Font">
+        <property name="Color">#004080</property>
+        <property name="Weight">bold</property>
+    </property>
+    <property name="Height">13</property>
+    <property name="Left">727</property>
+    <property name="Name">Label21</property>
+    <property name="ParentFont">0</property>
+    <property name="Top">462</property>
+    <property name="Width">73</property>
   </object>
   <object class="MySQLQuery" name="sqlgen" >
         <property name="Left">244</property>
