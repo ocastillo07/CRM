@@ -1,0 +1,38 @@
+IP Server
+https://201.143.79.106:10000 webmin
+
+root 123456
+
+En el programa CRM, tengo unos puntos que necesito me
+cotices la
+correccion.
+
+1.-En la ficha de Clientes, hay un campo de notas, necesitamos que ese campo lo puedas consultar solo si tienes el
+derecho de hacerlo, actualmente todos pueden accesar a ellas, es importante mencionar que todos deben de poder poner notas pero no
+todos las van a consultar, solo los que tengan el derecho de verlas.
+
+2.-Cada que doy de alta un perfil, se me duplica como usuario.
+
+3.-Algunos usuarios no me deja asignarle o quitarle derechos, no guarda los cambios.
+
+4.-Tenemos un modulo de RH, ahi se captan los colaboradores de la empresa, te deja capturar la informacion y al momento
+de salvar no guarda los datos.
+
+5.-En la opcion de No Refaccion necesitamos que tenga el boton de exportar a excel.
+
+6.-En la opcion de reportes, al generar el TPU marca error al exportarlo a excel.
+
+7.-Al dar el derecho de reportes se habilitan tambien los reportes log para todos los usuarios.
+
+8.-No funciona el SACO en servicio ni en CXC.
+
+9. No funciona el boton de actualizar en la no refaccion, no esta guardando los datos.
+
+
+
+Warning: mssql_pconnect() [function.mssql-pconnect]: Unable to connect to server: 10.30.8.102\IBC in C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uretpu.php on line 19
+
+
+promotorte
+
+123123

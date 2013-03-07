@@ -1,29 +1,31 @@
 [OpenFiles]
 Module1=dmconexion.php
-Module2=uclientesclasificaciones.php
-Module3=uclientesclasificacionesvista.php
-Module4=uclientes.php
+Module2=usolmantovehiculos.php
+Module3=usolmantovehiculosvista.php
+Module4=usolmantovehiculos_ajax.php
 [dmconexion.php]
-Line=13
-Position=45
+Line=0
+Position=0
 [C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\dmconexion.php]
 BreakpointCount=0
-[uclientesclasificaciones.php]
-Line=124
+[usolmantovehiculos.php]
+Line=317
 Position=45
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesclasificaciones.php]
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\usolmantovehiculos.php]
 BreakpointCount=0
-[uclientesclasificacionesvista.php]
-Line=35
-Position=7
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientesclasificacionesvista.php]
+[usolmantovehiculosvista.php]
+Line=0
+Position=0
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\usolmantovehiculosvista.php]
 BreakpointCount=0
-[uclientes.php]
-Line=869
-Position=48
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uclientes.php]
+[usolmantovehiculos_ajax.php]
+Line=9
+Position=53
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\usolmantovehiculos_ajax.php]
 BreakpointCount=0
 [Watches]
-Watchcount=0
+Watchcount=2
+Watch0=$_REQUEST
+Watch1=$axion
 [Status]
-OpenModule=uclientes.php
+OpenModule=usolmantovehiculos_ajax.php

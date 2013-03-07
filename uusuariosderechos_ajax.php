@@ -69,10 +69,10 @@ function LlenaTabIndex()
          '<tr> <td width="159" bgcolor="#FF9900"><span style=" font-family: Verdana; font-size: 10;  ">' .
          '<strong>MODULO: ' . $row['modulo'] . '</strong></span></td> </tr>';
       }
-      if($idmenu != $row['id'])
+      //if($idmenu != $row['id'])
          $col = '#FFFFFF';
-      else
-         $col = '#92C2EB';
+      //else
+      //   $col = '#92C2EB';
 
       $m .= '<tr bgcolor="' . $col . '">' .
       '<td><span style=" font-family: Verdana; font-size: 10;  ">' .

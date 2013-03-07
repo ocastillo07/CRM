@@ -106,7 +106,7 @@
         <property name="Style">fsNormal</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">431</property>
+    <property name="Left">412</property>
     <property name="Name">lbufh</property>
     <property name="ParentFont">0</property>
     <property name="Top">442</property>
@@ -133,7 +133,7 @@
     <property name="Name">lblnotas</property>
     <property name="ParentFont">0</property>
     <property name="Top">472</property>
-    <property name="Width">262</property>
+    <property name="Width">237</property>
     <property name="OnClick">lblnotasClick</property>
   </object>
   <object class="HiddenField" name="hfidnota" >
@@ -151,7 +151,7 @@
         <property name="Style">fsNormal</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">387</property>
+    <property name="Left">368</property>
     <property name="Name">lblcamiones</property>
     <property name="Top">498</property>
     <property name="Width">165</property>
@@ -165,7 +165,7 @@
         <property name="Weight">bold</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">387</property>
+    <property name="Left">368</property>
     <property name="Name">lblmodcamiones</property>
     <property name="ParentFont">0</property>
     <property name="Top">462</property>
@@ -610,7 +610,7 @@
     <property name="Caption">...</property>
     <property name="Color">#C0C0C0</property>
     <property name="Height">13</property>
-    <property name="Left">387</property>
+    <property name="Left">368</property>
     <property name="Name">lblparque</property>
     <property name="Top">482</property>
     <property name="Width">166</property>
@@ -642,10 +642,10 @@
         <property name="Style">fsNormal</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">557</property>
+    <property name="Left">538</property>
     <property name="Name">lblgrupos</property>
     <property name="Top">498</property>
-    <property name="Width">165</property>
+    <property name="Width">141</property>
   </object>
   <object class="Label" name="Label26" >
     <property name="Caption">Grupos</property>
@@ -656,7 +656,7 @@
         <property name="Weight">bold</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">557</property>
+    <property name="Left">538</property>
     <property name="Name">Label26</property>
     <property name="ParentFont">0</property>
     <property name="Top">462</property>
@@ -666,14 +666,14 @@
     <property name="Caption">...</property>
     <property name="Color">#C0C0C0</property>
     <property name="Height">15</property>
-    <property name="Left">557</property>
+    <property name="Left">538</property>
     <property name="Name">lblufhgrupos</property>
     <property name="Top">480</property>
     <property name="Width">103</property>
   </object>
   <object class="HiddenField" name="hfcount" >
     <property name="Height">18</property>
-    <property name="Left">557</property>
+    <property name="Left">538</property>
     <property name="Name">hfcount</property>
     <property name="Top">520</property>
     <property name="Width">72</property>
@@ -800,15 +800,6 @@
     <property name="Value">0</property>
     <property name="Width">56</property>
   </object>
-  <object class="RadioGroup" name="RadioGroup1" >
-    <property name="Color">#C0C0C0</property>
-    <property name="Height">89</property>
-    <property name="Items"><![CDATA[a:5:{i:0;s:1:&quot;A&quot;;i:1;s:1:&quot;B&quot;;i:2;s:1:&quot;C&quot;;i:3;s:1:&quot;D&quot;;i:4;s:1:&quot;E&quot;;}]]></property>
-    <property name="Left">730</property>
-    <property name="Name">RadioGroup1</property>
-    <property name="Top">480</property>
-    <property name="Width">68</property>
-  </object>
   <object class="Label" name="Label21" >
     <property name="Caption">Clasificacion</property>
     <property name="Color">#C0C0C0</property>
@@ -818,11 +809,23 @@
         <property name="Weight">bold</property>
     </property>
     <property name="Height">13</property>
-    <property name="Left">727</property>
+    <property name="Left">690</property>
     <property name="Name">Label21</property>
     <property name="ParentFont">0</property>
     <property name="Top">462</property>
     <property name="Width">73</property>
+  </object>
+  <object class="Label" name="lblclasificaciones" >
+    <property name="Caption">...</property>
+    <property name="Color">#C0C0C0</property>
+    <property name="Font">
+        <property name="Style">fsNormal</property>
+    </property>
+    <property name="Height">13</property>
+    <property name="Left">690</property>
+    <property name="Name">lblclasificaciones</property>
+    <property name="Top">498</property>
+    <property name="Width">104</property>
   </object>
   <object class="MySQLQuery" name="sqlgen" >
         <property name="Left">244</property>
