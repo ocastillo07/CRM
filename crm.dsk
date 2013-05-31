@@ -1,31 +1,59 @@
 [OpenFiles]
 Module1=dmconexion.php
-Module2=usolmantovehiculos.php
-Module3=usolmantovehiculosvista.php
-Module4=usolmantovehiculos_ajax.php
+Module2=uactividadesxasignar2.php
+Module3=uactividadesxasignarvista2.php
+Module4=uactividadesxasignarvista.php
+Module5=uactividadesxasignar.php
+Module6=uofertasvista.php
+Module7=urhpermisos.php
+Module8=urhpermisos_ajax.php
 [dmconexion.php]
 Line=0
 Position=0
 [C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\dmconexion.php]
 BreakpointCount=0
-[usolmantovehiculos.php]
-Line=317
-Position=45
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\usolmantovehiculos.php]
-BreakpointCount=0
-[usolmantovehiculosvista.php]
+[uactividadesxasignar2.php]
 Line=0
 Position=0
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\usolmantovehiculosvista.php]
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignar2.php]
 BreakpointCount=0
-[usolmantovehiculos_ajax.php]
-Line=9
-Position=53
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\usolmantovehiculos_ajax.php]
+[uactividadesxasignarvista2.php]
+Line=0
+Position=0
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignarvista2.php]
+BreakpointCount=0
+[uactividadesxasignarvista.php]
+Line=0
+Position=0
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignarvista.php]
+BreakpointCount=0
+[uactividadesxasignar.php]
+Line=14
+Position=43
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uactividadesxasignar.php]
+BreakpointCount=0
+[uofertasvista.php]
+Line=53
+Position=77
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uofertasvista.php]
+BreakpointCount=0
+[urhpermisos.php]
+Line=88
+Position=23
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\urhpermisos.php]
+BreakpointCount=0
+[urhpermisos_ajax.php]
+Line=96
+Position=4
+[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\urhpermisos_ajax.php]
 BreakpointCount=0
 [Watches]
-Watchcount=2
+Watchcount=6
 Watch0=$_REQUEST
-Watch1=$axion
+Watch1=$_GET['idpuesto']
+Watch2=$this->edtdesde->Text
+Watch3=$this->edthasta->Text
+Watch4=$this->edtvendedor->Text
+Watch5=$sql
 [Status]
-OpenModule=usolmantovehiculos_ajax.php
+OpenModule=urhpermisos_ajax.php

@@ -517,7 +517,12 @@ function BloquearPermisos($alta, $bloqueado, $idcolaborador)
       if(Derechos('BLOQTHPERM'))
         return true;
       else
-        return false;
+      {
+      	   if($bloqueado)
+	   	return false;
+	    else
+		return true;
+	}
    }
    else
    {
@@ -540,9 +545,6 @@ function BloquearPermisos($alta, $bloqueado, $idcolaborador)
           }
           else
           {
-            echo '<script language="javascript" type="text/javascript">
-                  alert("No tiene derechos para Bloquear Permisos");
-                  </script>';
             return false;
           }
       }

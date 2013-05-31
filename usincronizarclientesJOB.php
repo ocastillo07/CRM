@@ -1,47 +1,13 @@
 <?php
-include("dmconexion.php");
-include("urecursos.php");
-	session_start();
-	if(!isset($_SESSION["login"]))
-   {
-   	redirect("login.php");
-   }
-	require_once("vcl/vcl.inc.php");
-	use_unit("mysql.inc.php");
 
+ini_set("memory_limit","50M");
+ini_set("max_execution_time","500");
 
-	ini_set("memory_limit","50M");
-	ini_set("max_execution_time","500");
-
-if(!isset($_GET['sincronizar']))
-if(Derechos('Sincronizar Clientes') == false)
-{
-   echo '<script language="javascript" type="text/javascript">
-      alert(\' No tienes Derechos para Sincronizar Clientes\');
-      document.location.href("menu.php");
-      </script>';
-}
-else
-{
-   echo '<script language="javascript" type="text/javascript">
-    	   if(!confirm("Deseas sincronizar clientes?"))
-           document.location.href("menu.php");
-         document.location.href("usincronizarclientes.php?sincronizar=1");
-         </script>
-         ';
-}
-
-if(isset($_GET['sincronizar']))
-{
-   Sincronizar();
-}
+Sincronizar();
 
 function Sincronizar()
 {
-	// Connect to MSSQL
-   //international
-	//$mslink = mssql_pconnect('192.168.100.9:1399', 'sa', 'sa');
-   $mslink = mssql_pconnect(GetConfiguraciones('serverSQL'), GetConfiguraciones('userSQL'), GetConfiguraciones('passSQL'));
+   $mslink = mssql_pconnect('192.168.100.9:1399', 'sa', 'sa');
 	if (!$mslink)
 	{
 		echo 'No se conecto a MSSQL';
@@ -49,13 +15,10 @@ function Sincronizar()
 	else
 	{
 		//conectar con gedas
-		mssql_select_db(GetConfiguraciones('bdSQL'),$mslink);
-		//conexion mysql
-      //international
-		//$mylink = mysql_connect('localhost','root','freedom');
-      $mylink = mysql_connect(GetConfiguraciones('serverMySQL'),'root','freedom');
-
-		if(!$mylink)
+		mssql_select_db('gedas',$mslink);
+		
+		$mylink = mysql_connect('localhost','root','freedom');
+      		if(!$mylink)
 		{
 			echo 'No se pudo conectar a MySQL';
 		}
@@ -89,17 +52,14 @@ function Sincronizar()
 							str_replace('"','', str_replace('\'','',$row['mn'])).'","'.
 							str_replace('"','', str_replace('\'','',$row['edo'])).'","'.
 							$row['persona'].'","'.$row['estatus'].'","'.$row['alta'].'","'.$row['tel1'].
-							'","'.$row['tel2'].'",
-              "'.str_replace('"','', str_replace('\'','',$row['mail'])).'",
-              "'.$_SESSION['login'].'", curdate(), curtime())';
+							'","'.$row['tel2'].'","'.str_replace('"','', str_replace('\'','',$row['mail'])).
+							'","root", curdate(), curtime())';
 				$myrs= mysql_query($mysql) or die('Error de SQL: '.$mysql);
 			}
 		}
 	}
-	echo '<script language="javascript" type="text/javascript">
-         alert(\'Finalizo la Sincronizacion \');
-			document.location.href("menu.php");
-       </script>';
+	echo 'Finalizo la Sincronizacion';
+
 	mssql_close($mslink);
 	mysql_close($mylink);
 }

@@ -107,7 +107,7 @@
   </object>
   <object class="ComboBox" name="cbofiltro" >
     <property name="Height">21</property>
-    <property name="Items"><![CDATA[a:6:{i:0;s:5:&quot;Todos&quot;;i:1;s:11:&quot;IDActividad&quot;;i:2;s:8:&quot;Vendedor&quot;;i:3;s:14:&quot;FechaActividad&quot;;i:4;s:7:&quot;Cliente&quot;;i:5;s:6:&quot;Asunto&quot;;}]]></property>
+    <property name="Items"><![CDATA[a:7:{i:0;s:5:&quot;Todos&quot;;i:1;s:11:&quot;IDActividad&quot;;i:2;s:8:&quot;Vendedor&quot;;i:3;s:14:&quot;FechaActividad&quot;;i:4;s:7:&quot;Cliente&quot;;i:5;s:6:&quot;Asunto&quot;;i:6;s:7:&quot;Estatus&quot;;}]]></property>
     <property name="Left">360</property>
     <property name="Name">cbofiltro</property>
     <property name="ParentColor">0</property>

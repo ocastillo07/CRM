@@ -36,6 +36,7 @@ class uresegnorefvista extends Page
    public $hfidsolicitud = null;
    public $btneliminar = null;
    public $btnnuevo = null;
+
    function btnexportarClick($sender, $params)
    {
       if(Derechos('REEXNOREF') == false)
@@ -177,7 +178,8 @@ class uresegnorefvista extends Page
 
       $sql = 'SELECT r.idsolicitud, e.nombre as estatus, p.nombre as plaza, r.fechacreacion,
               '.NombreFisica('u').' as originador, if(r.procedencia="S", "SERVICIO", "MOSTRADOR") as procedencia,
-              if(r.procedencia="S", r.idservicio, r.norecibo) as documento, r.fechacierre
+              if(r.procedencia="S", r.idservicio, r.norecibo) as documento, r.fechacierre,
+              (select fecharecepcion from resegnorefdet det where det.idsolicitud = r.idsolicitud limit 1) as fecharecepcion
               from resegnoref r left join plazas p on p.idplaza=r.idplaza
               left join resegnoref_estatus as e on e.idestatus=r.idestatus
               left join usuarios u on u.idusuario=r.idoriginador ';

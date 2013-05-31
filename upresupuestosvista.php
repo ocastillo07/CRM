@@ -8,6 +8,7 @@ include("urecursos.php");
 
 require_once("vcl/vcl.inc.php");
 //Includes
+use_unit("comctrls.inc.php");
 use_unit("mysql.inc.php");
 use_unit("dbgrids.inc.php");
 use_unit("db.inc.php");

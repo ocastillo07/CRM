@@ -151,11 +151,14 @@ class uactividadesxasignarvista2 extends Page
          case 3:  //FechaActividad
                   $cond = ' and fechaactividad>"'.$this->edbuscar->Text.'"';
                   break;
+         case 4:  //Cliente
+                  $cond = ' and '.$nom.' like "%'.$this->edbuscar->Text.'%"';
+                  break;
          case 5:  //Asunto
                   $cond = ' and cla.nombre like "%'.$this->edbuscar->Text.'%"';
                   break;
-         case 4:  //Cliente
-                  $cond = ' and '.$nom.' like "%'.$this->edbuscar->Text.'%"';
+         case 6:  //Cliente
+                  $cond = ' and clas.nombre like "%'.$this->edbuscar->Text.'%"';
                   break;
          }
 
@@ -171,7 +174,7 @@ class uactividadesxasignarvista2 extends Page
             $sql=$sql.' where a.idvendedor>0 and u.idpuesto = 29 '.
                   $cond.' order by idactividad desc';
          else
-            $sql=$sql.' where login="'.$_SESSION["login"].'" and u.idpuesto = ' . $_GET["idpuesto"] .
+            $sql=$sql.' where login="'.$_SESSION["login"].'" ' .      //and u.idpuesto = ' . $_GET["idpuesto"] .
                   ' '.$cond.' order by idactividad desc';
 
          $sqls='select count(*) as total from ('.$sql.') as t';

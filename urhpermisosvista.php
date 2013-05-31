@@ -187,8 +187,11 @@ class urhpermisosvista extends Page
               left join rhestatus e on e.idestatus=p.idestatus
               left join rhcolaboradores c on c.idcolaborador=p.idcolaborador ';
 
+	if ($cond != ' ')
+		$cond = ' and ' . $cond;
+
       if(Derechos('TODRHPERM') == true)
-         $sql = $sql . 'where p.idsolicitud > 0 ' . $cond . ' group by idsolicitud';
+         $sql = $sql . 'where p.idsolicitud > 0  ' . $cond . ' group by idsolicitud';
       else
          $sql = $sql . 'where p.idoriginador="' . $_SESSION['idusuario'] . '" ' . $cond . ' group by idsolicitud';
 

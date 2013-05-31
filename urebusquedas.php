@@ -3,7 +3,9 @@
 //Includes
 include("dmconexion.php");
 include("urecursos.php");
-session_start();
+if(!isset($_SESSION)) {
+     session_start();
+}
 if(!isset($_SESSION["login"]))
    redirect("login.php");
 

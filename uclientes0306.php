@@ -20,8 +20,6 @@ use_unit("stdctrls.inc.php");
 //Class definition
 class uclientes extends Page
 {
-   public $lblclasificaciones = null;
-   public $Label21 = null;
    public $hfderechonotas = null;
    public $edcp = null;
    public $hfpath2 = null;
@@ -746,7 +744,6 @@ class uclientes extends Page
 
             $this->TraeCamiones();
             $this->TraeGrupos();
-            $this->TraeClasificaciones();
 
          }
       }
@@ -839,7 +836,6 @@ class uclientes extends Page
       $this->sqlgen->sql = $rsm;
       $this->sqlgen->open();
       $t = '<table width="120" border="0" cellpadding="0" cellspacing="0" align="center">';
-      $c = 1;
       while(!$this->sqlgen->EOF == true)
       {
          $this->lblufhgrupos->Caption = $this->sqlgen->fieldget('uf'); //$row[2];
@@ -851,71 +847,34 @@ class uclientes extends Page
           <td height = "20"> <span style=" font-family: Verdana; font-size: 11; "> ' .
          $this->sqlgen->fieldget('nombre') . ' </span>  </td>
           <td><span style=" font-family: Verdana; font-size: 11; ">
-          <input type="checkbox" name="chk' . $c . '"
-          id="chk' . $c . '"
+          <input type="checkbox" name="chk' . $this->sqlgen->fieldget('id') . '"
+          id="chk' . $this->sqlgen->fieldget('id') . '"
           value="' . $this->sqlgen->fieldget('id') . '" ' . $ch . '     /></span></td>
           </tr>';
 
          $this->sqlgen->next();
-         $c++;
       }
-      $this->hfcount->Value = $c;
+      $this->hfcount->Value = $this->sqlgen->fieldget('id');
       $t = $t . ' <tr><td></td></tr><tr><td></td></tr></table> ';
       $this->lblgrupos->Caption = $t;
 
    }
 
-   function TraeClasificaciones()
-   {
-      $rsm = "select idclienteclasificacion as id, cc.nombre, (select idclasificacion
-               from clientes where idcliente = ".$this->edidcliente->Text." and idclasificacion = cc.idclienteclasificacion) as ch
-               from clientesclasificaciones cc ";
-      $this->sqlgen->close();
-      $this->sqlgen->sql = $rsm;
-      $this->sqlgen->open();
-      $t = '<table width="120" border="0" cellpadding="0" cellspacing="0" align="center">';
-      while(!$this->sqlgen->EOF == true)
-      {
-         //$this->lblufhgrupos->Caption = $this->sqlgen->fieldget('uf'); //$row[2];
-         if($this->sqlgen->fieldget('ch') > 0)
-            $ch = 'checked="checked"';
-         else
-            $ch = '';
-
-         $t = $t . '<tr>
-                   <td><span style=" font-family: Verdana; font-size: 11; ">
-                   <input  type=radio id="RadioGroup1_'. $this->sqlgen->fieldget('id') .'"
-                   tabIndex=0 name="RadioClas" value="' . $this->sqlgen->fieldget('id') . '" ' . $ch . '>
-                   </span></td>
-                   <td height = "20"> <span style=" font-family: Verdana; font-size: 11; "> ' .
-                   $this->sqlgen->fieldget('nombre') . ' </span>  </td>
-                   </tr>';
-
-         $this->sqlgen->next();
-      }
-      //$this->hfcount->Value = $this->sqlgen->fieldget('id');
-      $t = $t . ' <tr><td></td></tr><tr><td></td></tr></table> ';
-      $this->lblclasificaciones->Caption = $t;
-
-   }
-
    function GuardaGrupo()
    {
-      $rsm = "SELECT g.idgrupo as id, g.nombre, concat(cg.usuario, ' ', cg.fecha) as uf
-              FROM clientesgruposcat AS g
-              left Join clientesgrupos cg on cg.idgrupo = g.idgrupo and idcliente = " . $this->edidcliente->Text;
+      $rsm = "SELECT g.idclasificacion as id, g.nombre,
+            concat(cg.usuario, ' ', cg.fecha) as uf FROM clasificaciones AS g
+            left Join clientesgrupos cg on cg.idgrupo = g.idclasificacion and idcliente = " . $this->edidcliente->Text . "
+            where g.idtipo = 9 ";
       $r = mysql_query($rsm)or die("error sql: " . $rsm . " " . mysql_error());
-      $c = 1;
       while($row = mysql_fetch_array($r))
       {
-         $h = $_REQUEST['chk' . $c];
+         $h = $_REQUEST['chk' . $row[0]];
 
          if($h == $row[1])
             continue;
          else
             $ban = 1;
-
-         $c++;
       }
 
       if($ban == 1)
@@ -923,8 +882,9 @@ class uclientes extends Page
          $sql = 'Delete from clientesgrupos where idcliente=' . $this->edidcliente->Text;
          $result = mysql_query($sql)or die("error sql: " . $sql . " " . mysql_error());
 
-         for($i = 1; $i <= $c; $i++)
+         for($i = 1; $i <= $this->hfcount->Value; $i++)
          {
+
             if($_REQUEST['chk' . $i] > 0)
             {
                $s = 'Insert into clientesgrupos (idcliente, idgrupo, usuario, fecha, hora) ' .
@@ -934,15 +894,6 @@ class uclientes extends Page
          }
          dmconexion::Log('Edito los grupos del cliente' . $this->edidcliente->Text, 3);
       }
-   }
-
-   function GuardaClasificacion()
-   {
-      $rsm = "update clientes set idclasificacion = ". $_REQUEST['RadioClas'] . "
-             where idcliente = " . $this->edidcliente->Text;
-      $r = mysql_query($rsm)or die("error sql: " . $rsm . " " . mysql_error());
-
-      dmconexion::Log('Edito la clasificacion del cliente' . $this->edidcliente->Text, 3);
    }
 
    function Guardar()
@@ -1054,7 +1005,6 @@ class uclientes extends Page
 
             $this->GuardaParque();
             $this->GuardaGrupo();
-            $this->GuardaClasificacion();
 
             dmconexion::Log($msg, $nivel);
 

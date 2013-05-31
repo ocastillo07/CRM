@@ -68,6 +68,7 @@ class usolmantovehiculos extends Page
    public $btnguardarcerrar = null;
    public $btnguardar = null;
 
+
    function usolmantovehiculosShow($sender, $params)
    {
       $this->pbotones->Width = $_SESSION["width"];
@@ -844,6 +845,7 @@ class usolmantovehiculos extends Page
           from usuarios u left join puestos p on p.idpuesto=u.idpuesto
           where p.responsablemanto=1';
       $rs = mysql_query($sql)or die('Error de consulta SQL: ' . $sql . ' ' . mysql_error());
+      $this->cbresponsable->Clear();
       $this->cbresponsable->AddItem('Sin Asignar', null , '-1');
       while($row = mysql_fetch_array($rs))
          $this->cbresponsable->AddItem($row['nombre'], null , $row['idusuario']);

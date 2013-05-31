@@ -8,6 +8,7 @@ if(!isset($_SESSION["login"]))
 
 require_once("vcl/vcl.inc.php");
 //Includes
+use_unit("comctrls.inc.php");
 use_unit("mysql.inc.php");
 use_unit("dbgrids.inc.php");
 use_unit("db.inc.php");
@@ -19,6 +20,11 @@ use_unit("stdctrls.inc.php");
 //Class definition
 class uofertasvista extends Page
 {
+   public $edtvendedor = null;
+   public $edthasta = null;
+   public $edtdesde = null;
+   public $Label3 = null;
+   public $Label2 = null;
    public $lbtitulo = null;
    public $sqlexportar = null;
    public $btnexportar = null;
@@ -48,7 +54,7 @@ class uofertasvista extends Page
        //alert(document.body.offsetWidth+ ' '+ window.screen.width);
        grid.setWidth(document.body.offsetWidth - 40);
        grid.setHeight(document.body.offsetHeight - 150); //150
-       vcl.$('lblpagina_outer').style.top=document.body.offsetHeight-50;
+       vcl.$('lblpagina_outer').style.top=document.body.offsetHeight-30;
 <?php
 
    }
@@ -138,11 +144,6 @@ class uofertasvista extends Page
          case 3:
             //Cliente
             $cond = ' and ' . $nom . ' like "%' . $this->edbuscar->Text . '%"';
-            break;
-         case 4:
-            //vendedor
-            $cond = ' and  concat(u.nombre," ",u.apaterno," ",u.amaterno) like "%' .
-            $this->edbuscar->Text . '%"';
             break;
          case 5:
             //modelo
@@ -235,10 +236,6 @@ class uofertasvista extends Page
                              alert(\'No es un valor entero\');
                            </script>';
             break;
-         case 18:
-            //fechacreacion
-            $cond = ' and fechacreacion>="' . $this->edbuscar->Text . '"';
-            break;
          case 19:
             //ano
             if(is_numeric($this->edbuscar->Text))
@@ -258,8 +255,16 @@ class uofertasvista extends Page
                              alert(\'No es un valor entero\');
                            </script>';
             break;
-            break;
+
       }
+      //vendedor
+      if($this->edtvendedor->Text != '')
+         $cond .= ' and  concat(u.nombre," ",u.apaterno," ",u.amaterno) like "%' . $this->edtvendedor->Text . '%"';
+
+      //fechacreacion
+      if($this->edtdesde->Text != '' && $this->edthasta->Text != '')
+         $cond .= ' and fechacreacion between "' . $this->edtdesde->Text . '" and "' . $this->edthasta->Text . '"';
+
       $from = 'from ofertas o
                 left join productos pro on o.idproducto=pro.idproducto
 					      left join clientes c on c.idcliente=o.idcliente

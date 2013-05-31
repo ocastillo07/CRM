@@ -18,6 +18,7 @@ use_unit("stdctrls.inc.php");
 //Class definition
 class upuestos extends Page
 {
+   public $chkmantos = null;
    public $chksolicitudes = null;
    public $sqlgen = null;
    public $tblpuestos = null;
@@ -128,7 +129,7 @@ class upuestos extends Page
             $this->sqlgen->close();
             $r = ufh('p');
             $this->sqlgen->SQL = 'Select idpuesto,nombre, idarea,responsableaccion,
-                              responsablesolicitud,' . $r . ' as ufh from puestos p
+                              responsablesolicitud,responsablemanto, ' . $r . ' as ufh from puestos p
                               where idpuesto = ' . $this->edidpuesto->Text;
             $this->sqlgen->Active = true;
             $this->sqlgen->open();
@@ -143,6 +144,10 @@ class upuestos extends Page
                $this->chksolicitudes->Checked = true;
             else
                $this->chksolicitudes->Checked = false;
+            if($this->sqlgen->fieldget("responsablemanto") == 1)
+               $this->chkmantos->Checked = true;
+            else
+               $this->chkmantos->Checked = false;
             $this->lbufh->Caption = $this->sqlgen->fieldget("ufh");
          }
       }
@@ -194,6 +199,11 @@ class upuestos extends Page
                $this->tblpuestos->fieldset("responsablesolicitud", 1);
             else
                $this->tblpuestos->fieldset("responsablesolicitud", 0);
+
+            if($this->chkmantos->Checked)
+               $this->tblpuestos->fieldset("responsablemanto", 1);
+            else
+               $this->tblpuestos->fieldset("responsablemanto", 0);
             $this->tblpuestos->fieldset("usuario", $_SESSION["login"]);
             $this->tblpuestos->fieldset("fecha", date("Y/n/j"));
             $this->tblpuestos->fieldset("hora", date("H:i:s"));

@@ -151,12 +151,6 @@ class uclientesvista extends Page
       else
          $estatus = '';
 
-      if(Derechos('TODCLI') == true)
-         $porusuario = '';
-      else
-         $porusuario = ' ';
-
-
       $this->sqlgen->close();
       $sql = "Select count(*) as total from (
 		  Select idcliente as NumCliente, Nombre, nomComercial as NomComercial, rfc as RFC,
@@ -268,7 +262,6 @@ class uclientesvista extends Page
         left join clientesflotilla cf on cf.idcliente=c.idcliente left join camionestipos ct on ct.idtipo=cf.idtipo
         left join clientesgrupos cg on cg.idcliente=c.idcliente left join clasificaciones g on g.idclasificacion=cg.idgrupo
         ".$estatus.") as c  group by idcliente " . $cond . " " . $orden;
-
       $sql = "Create table " . $this->hftabla->Value . ' ' . $this->sqlgen->SQL;
       $result = mysql_query($sql)or die("error sql: " . $sql . " " . mysql_error());
       $this->RellenaLista();

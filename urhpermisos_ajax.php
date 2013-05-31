@@ -90,11 +90,11 @@ if(isset($_POST['Agregar']))
    $t = count($tabla);
    $ban = false;
 
-   if(0 > DateDiff($_POST['fecharep'], date('Y-n-j')))
-   {
-      $m = 'La fecha de Reposicion es menor a la actual ' . $_POST['fecharep'];
-      $ban = true;
-   }
+  // if(0 > DateDiff($_POST['fecharep'], date('Y-n-j')))
+  // {
+  //    $m = 'La fecha de Reposicion es menor a la actual ' . $_POST['fecharep'];
+  //    $ban = true;
+  // }
 
    if(TimeDiff($_POST['iniciorep'], $_POST['finrep']) > 0)
    {

@@ -154,6 +154,15 @@ class uactividadesxasignar extends Page
                    "values (".$idnota.", '".$nota."', ".
                    "'".$_SESSION['login']."', "."curdate(), curtime())";
             $result = mysql_query($sql) or die("error sql: ".$sql." ".mysql_error());
+
+             //Enviar correo de aviso al asesor
+            $msn = 'Se le asignó la siguiente ' . $nota;
+            $sql = 'select email from usuarios where idusuario=' . $this->cbasesor->ItemIndex;
+            $rs = mysql_query($sql)or die('Error de Consulta SQL: ' . $sql.' '.mysql_error());
+            $row = mysql_fetch_row($rs);
+            $correos = $row[0];
+            enviarmailattach('CRM@ibc.com.mx', 'Sistema de CRM', $correos, 'Varios', 'AVISO DE ACTIVIDAD ASIGNADA', $msn, '', '');
+
          }
          else   //modificacion
          {

@@ -4,7 +4,7 @@
   <property name="Caption">Notificaciones</property>
   <property name="Color">#C0C0C0</property>
   <property name="DocType">dtNone</property>
-  <property name="Height">736</property>
+  <property name="Height">888</property>
   <property name="IsMaster">0</property>
   <property name="Name">unotificaciones</property>
   <property name="Width">800</property>
@@ -285,7 +285,7 @@
     <property name="Left">13</property>
     <property name="Name">Label23</property>
     <property name="ParentFont">0</property>
-    <property name="Top">565</property>
+    <property name="Top">656</property>
     <property name="Width">445</property>
   </object>
   <object class="Label" name="Label24" >
@@ -294,7 +294,7 @@
     <property name="Height">13</property>
     <property name="Left">29</property>
     <property name="Name">Label24</property>
-    <property name="Top">584</property>
+    <property name="Top">675</property>
     <property name="Width">44</property>
   </object>
   <object class="Memo" name="midealease" >
@@ -306,7 +306,7 @@
     <property name="ParentColor">0</property>
     <property name="ParentShowHint">0</property>
     <property name="ShowHint">1</property>
-    <property name="Top">584</property>
+    <property name="Top">675</property>
     <property name="Width">385</property>
   </object>
   <object class="Label" name="Label1" >
@@ -319,7 +319,7 @@
     <property name="Left">13</property>
     <property name="Name">Label1</property>
     <property name="ParentFont">0</property>
-    <property name="Top">649</property>
+    <property name="Top">740</property>
     <property name="Width">445</property>
   </object>
   <object class="Label" name="Label2" >
@@ -328,7 +328,7 @@
     <property name="Height">13</property>
     <property name="Left">29</property>
     <property name="Name">Label2</property>
-    <property name="Top">668</property>
+    <property name="Top">759</property>
     <property name="Width">44</property>
   </object>
   <object class="Memo" name="mRH" >
@@ -340,7 +340,41 @@
     <property name="ParentColor">0</property>
     <property name="ParentShowHint">0</property>
     <property name="ShowHint">1</property>
-    <property name="Top">668</property>
+    <property name="Top">759</property>
+    <property name="Width">385</property>
+  </object>
+  <object class="Label" name="Label3" >
+    <property name="Caption">Correos para Avisos de Solicitudes Mantenimiento a Vehiculos</property>
+    <property name="Color">#C0C0C0</property>
+    <property name="Font">
+        <property name="Weight">bold</property>
+    </property>
+    <property name="Height">13</property>
+    <property name="Left">13</property>
+    <property name="Name">Label3</property>
+    <property name="ParentFont">0</property>
+    <property name="Top">569</property>
+    <property name="Width">445</property>
+  </object>
+  <object class="Label" name="Label4" >
+    <property name="Caption">E-Mail</property>
+    <property name="Color">#C0C0C0</property>
+    <property name="Height">13</property>
+    <property name="Left">29</property>
+    <property name="Name">Label4</property>
+    <property name="Top">588</property>
+    <property name="Width">44</property>
+  </object>
+  <object class="Memo" name="mmantos" >
+    <property name="Height">54</property>
+    <property name="Hint">Los correos van separados por comas</property>
+    <property name="Left">77</property>
+    <property name="Lines">a:0:{}</property>
+    <property name="Name">mmantos</property>
+    <property name="ParentColor">0</property>
+    <property name="ParentShowHint">0</property>
+    <property name="ShowHint">1</property>
+    <property name="Top">588</property>
     <property name="Width">385</property>
   </object>
 </object>

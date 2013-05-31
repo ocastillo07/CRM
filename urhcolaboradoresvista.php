@@ -70,7 +70,7 @@ class urhcolaboradoresvista extends Page
    function btneliminarJSClick($sender, $params)
    {
 ?>
-       if(!confirm('Desea Eliminar el Usuario Seleccionado?'))
+       if(!confirm('Desea Eliminar el Colaborador Seleccionado?'))
             return(false);
        var model=grid.getTableModel();
        var row=grid.getFocusedRow();

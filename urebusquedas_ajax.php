@@ -2,6 +2,9 @@
 include("dmconexion.php");
 include("urecursos.php");
 
+//echo 'alert("'. $_POST['TraerDetalle'] .' ' . $_POST['tabla'] . '"); ';
+$p= 1;
+$p = 5*$p;
 
 if(isset($_POST['TraerDetalle']))
 {
@@ -13,7 +16,7 @@ if(isset($_POST['TraerDetalle']))
               break;
    case 'C' : Ordenes();
               break;
-      }
+   }
 }
 
 function Servicios()

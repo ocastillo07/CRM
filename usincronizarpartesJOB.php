@@ -1,62 +1,32 @@
 <?php
-include("dmconexion.php");
-include("urecursos.php");
-	session_start();
-	if(!isset($_SESSION["login"]))
-   {
-   	redirect("login.php");
-   }
-require_once("vcl/vcl.inc.php");
-use_unit("mysql.inc.php");
+//include("dmconexion.php");
+//include("urecursos.php");
+//require_once("mysql.inc.php");
 
 ini_set("memory_limit", "50M");
 ini_set("max_execution_time", "500");
 
-if(!isset($_GET['sincronizar']))
-if(Derechos('Sincronizar Partes') == false)
-{
-   echo '<script language="javascript" type="text/javascript">
-      alert(\' No tienes Derechos para Sincronizar Partes\');
-      document.location.href("menu.php");
-      </script>';
-}
-else
-{
-   echo '<script language="javascript" type="text/javascript">
-         if(!confirm("Deseas sincronizar partes?"))
-           document.location.href("menu.php");
-         document.location.href("usincronizarpartes.php?sincronizar=1");
-         </script>
-         ';
-}
+Sincronizar();
 
-if(isset($_GET['sincronizar']))
-{
-   Sincronizar();
-}
 
 function Sincronizar()
 {
    // Connect to MSSQL
-   $mslink = mssql_pconnect(GetConfiguraciones('serverSQL'), 'sa', 'sa');
+   $mslink = mssql_pconnect('192.168.100.9:1399', 'sa', 'sa');
 
    if(!$mslink)
    {
-      echo '<script language="javascript" type="text/javascript">
-            alert(\'No se conecto a MSSQL\');
-            </script>';
+      echo 'No se conecto a MSSQL';
    }
    else
    {
       //conectar con gedas
       mssql_select_db('gedas', $mslink);
       //conexion mysql
-      $mylink = mysql_connect(GetConfiguraciones('serverMySQL'), 'root', 'freedom');
+      $mylink = mysql_connect('localhost', 'root', 'freedom');
       if(!$mylink)
       {
-         echo '<script language="javascript" type="text/javascript">
-               alert(\'No se pudo conectar a MySQL\');
-               </script>';
+         echo 'No se pudo conectar a MySQL';
       }
       else
       {
@@ -95,9 +65,9 @@ function Sincronizar()
                      values ('.$c.', ' . $row['idalmacen'] . ',"' . $row['clave'] . '","' . $row['estatus'] . '","' . $row['unidad'] .
                      '","' . $row['linea'] . '","' . $row['moneda'] . '","' . str_replace('"', "" ,str_replace('"', "", $row['descripcion'])) . '",' .
                       $row['exis'] . ',' . $row['dis'] . ',' . $row['costoant'] . ',' . $row['costo'] . ',' . $row['prom'] . ',
-						   ' . $row['precio'] . ',' . $row['esp'] . ',"' . $row['fentrada'] . '","' . $row['fsalida'] . '",
-						   "' . $row['pasillo'] . '","' . $row['ubicacion'] . '",' . $row['utilidad'] . ',' . $row['smin'] . ',' .
-                     $row['smax'] . ', "'.$_SESSION['login'].'", curdate(), curtime())';
+			' . $row['precio'] . ',' . $row['esp'] . ',"' . $row['fentrada'] . '","' . $row['fsalida'] . '",
+			"' . $row['pasillo'] . '","' . $row['ubicacion'] . '",' . $row['utilidad'] . ',' . $row['smin'] . ',' .
+                     $row['smax'] . ', "root", curdate(), curtime())';
             $myrs = mysql_query($mysql)or die('Error en el SQL: ' . $mysql);
             $c++;
          }
@@ -114,10 +84,6 @@ function Sincronizar()
          }
       }
    }
-   echo '<script language="javascript" type="text/javascript">
-         alert(\'Finalizo la Sincronizacion \');
-			document.location.href("menu.php");
-       </script>';
    mssql_close($mslink);
    mysql_close($mylink);
 }

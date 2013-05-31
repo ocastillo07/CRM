@@ -19,6 +19,9 @@ use_unit("stdctrls.inc.php");
 //Class definition
 class unotificaciones extends Page
 {
+       public $mmantos = null;
+       public $Label4 = null;
+       public $Label3 = null;
        public $mRH = null;
        public $Label2 = null;
        public $Label1 = null;
@@ -90,6 +93,9 @@ class unotificaciones extends Page
          $sql= 'update configuraciones set valor="'.$this->msolicitudes->Text.'" where concepto="mailsolinformatica"';
          $rs=mysql_query($sql) or die('Error de consulta SQL: '.$sql);
 
+         $sql= 'update configuraciones set valor="'.$this->mmantos->Text.'" where concepto="mailsolmantovehiculo"';
+         $rs=mysql_query($sql) or die('Error de consulta SQL: '.$sql);
+
          //almacen 01
          $sql= 'update configuraciones set valor="'.$this->mrefacciones01->Text.'" where concepto="mailrefaccionesAL01"';
          $rs=mysql_query($sql) or die('Error de consulta SQL: '.$sql);
@@ -134,6 +140,12 @@ class unotificaciones extends Page
          $rs= mysql_query($sql) or die('Error de consulta SQL: '.$sql);
          $row= mysql_fetch_row($rs);
          $this->msolicitudes->Text= $row[0];
+
+         //correos solicitudes mantos vehiculos
+			$sql='select valor from configuraciones where concepto ="mailsolmantovehiculo"';
+         $rs= mysql_query($sql) or die('Error de consulta SQL: '.$sql);
+         $row= mysql_fetch_row($rs);
+         $this->mmantos->Text= $row[0];
 
 			//correos refacciones almacen 01
 			$sql='select valor from configuraciones where concepto ="mailrefaccionesAL01"';

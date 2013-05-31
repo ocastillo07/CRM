@@ -404,9 +404,13 @@ class urhcolaboradores extends Page
       }
 
       //Actualizar bloqueo
-      //Actualizar bloqueo
       if(BloquearPermisos($this->hfestatus->Value, $this->chkbloqueado->Checked, $this->edidcolaborador->Text) == false)
+      {
+	  echo '<script language="javascript" type="text/javascript">
+                  alert("No tiene derechos para Bloquear/Desbloquear Permisos");
+               </script>';
          return false;
+      }
 
       return true;
    }

@@ -170,7 +170,16 @@
     <property name="Height">34</property>
     <property name="Left">368</property>
     <property name="Name">chksolicitudes</property>
-    <property name="Top">168</property>
+    <property name="Top">155</property>
+    <property name="Width">195</property>
+  </object>
+  <object class="CheckBox" name="chkmantos" >
+    <property name="Caption">Responsable en Solicitudes a Mantenimientos de Vehiculos</property>
+    <property name="Color">#C0C0C0</property>
+    <property name="Height">34</property>
+    <property name="Left">368</property>
+    <property name="Name">chkmantos</property>
+    <property name="Top">200</property>
     <property name="Width">195</property>
   </object>
   <object class="MySQLQuery" name="sqlgen2" >

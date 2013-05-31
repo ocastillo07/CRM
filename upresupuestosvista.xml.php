@@ -17,7 +17,7 @@
     <property name="Cursor">crPointer</property>
     <property name="Datasource">dspresupuestos</property>
     <property name="Height">468</property>
-    <property name="Left">12</property>
+    <property name="Left">11</property>
     <property name="Name">grid</property>
     <property name="ReadOnly">1</property>
     <property name="Top">100</property>
@@ -99,15 +99,15 @@
     <property name="Height">13</property>
     <property name="Left">12</property>
     <property name="Name">Label1</property>
-    <property name="Top">73</property>
-    <property name="Width">51</property>
+    <property name="Top">69</property>
+    <property name="Width">43</property>
   </object>
   <object class="Edit" name="edbuscar" >
     <property name="Height">21</property>
-    <property name="Left">64</property>
+    <property name="Left">61</property>
     <property name="Name">edbuscar</property>
     <property name="ParentColor">0</property>
-    <property name="Top">65</property>
+    <property name="Top">61</property>
     <property name="Width">289</property>
   </object>
   <object class="ComboBox" name="cbofiltro" >
@@ -116,7 +116,7 @@
     <property name="Left">360</property>
     <property name="Name">cbofiltro</property>
     <property name="ParentColor">0</property>
-    <property name="Top">65</property>
+    <property name="Top">61</property>
     <property name="Width">89</property>
   </object>
   <object class="Button" name="btnbuscar" >
@@ -125,7 +125,7 @@
     <property name="Left">464</property>
     <property name="Name">btnbuscar</property>
     <property name="ParentColor">0</property>
-    <property name="Top">61</property>
+    <property name="Top">59</property>
     <property name="Width">51</property>
   </object>
   <object class="Edit" name="edgo" >
