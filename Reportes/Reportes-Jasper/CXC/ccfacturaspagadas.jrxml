@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ccfacturaspagadas" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Proyectos\\Web\\ibc\\reportes\\CXC\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pnombrerep" class="java.lang.String"/>
+	<parameter name="pperiodo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select $P{pnombrerep} as nombrerep,$P{pperiodo} as periodo,
+CapitalString(a.nombrecorto) as almacen,CapitalString(t.nombre) as tipo,CapitalString(m.moneda) as moneda,
+if(f.procedencia='R','Refacciones',if(f.procedencia='S','Servicio','Unidades')) as procedencia,
+idfactura,fp.nombre as formapago,CapitalString(b.nombre) as banco, pc.fechacreacion as fechapago,
+sum(pc.abono) as abono,round(sum(if(pc.idmoneda=2,pc.abono,0)),2) as abonod,round(sum(if(pc.idmoneda=1,pc.abono,0)),2) as abonop,f.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,
+if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente,
+pc.idcontador
+from facturas f
+left join clientes c on c.idcliente=f.idcliente
+left join ccpagosclientes pc on pc.iddocumento=f.idfactura
+left join ccbancos b on b.idbanco=pc.idbanco
+left join ccformaspagos fp on fp.idformapago=pc.idformapago
+left join ccmovimientos mv on mv.idmovimiento=pc.movimiento
+left join realmacen a on a.idalmacen=f.idalmacen
+left join monedas m on m.idmoneda=pc.idmoneda
+left join retipopagos t on t.idtipopago=f.idtipopago
+where mv.pago=1 and pc.idcontador not in (select folioreferencia from ccpagosclientescan)
+$P!{pcondicion}
+GROUP BY almacen,tipo,moneda,procedencia,idfactura
+order by almacen,tipo,moneda,procedencia,idfactura]]>
+	</queryString>
+	<field name="nombrerep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="periodo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idfactura" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="formapago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="banco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechapago" class="java.util.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="abono" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="procedencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="almacen" class="java.lang.String"/>
+	<field name="idcliente" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String"/>
+	<field name="abonop" class="java.lang.Double"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="abonod" class="java.lang.Float"/>
+	<variable name="abono_1" class="java.lang.Float" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{abono}]]></variableExpression>
+	</variable>
+	<variable name="abono_2" class="java.lang.Float" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{abono}]]></variableExpression>
+	</variable>
+	<variable name="abono_3" class="java.lang.Float" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{abono}]]></variableExpression>
+	</variable>
+	<variable name="abono_4" class="java.lang.Float" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{abono}]]></variableExpression>
+	</variable>
+	<variable name="abonop_1" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonop}]]></variableExpression>
+	</variable>
+	<variable name="abonop_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonop}]]></variableExpression>
+	</variable>
+	<variable name="abono_5" class="java.lang.Float" resetType="Group" resetGroup="factura" calculation="Sum">
+		<variableExpression><![CDATA[$F{abono}]]></variableExpression>
+	</variable>
+	<variable name="totcliente" class="java.lang.String"/>
+	<variable name="abonop_3" class="java.lang.Double" resetType="Group" resetGroup="tipo" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonop}]]></variableExpression>
+	</variable>
+	<variable name="abonod_1" class="java.lang.Float" resetType="Group" resetGroup="tipo" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonod}]]></variableExpression>
+	</variable>
+	<variable name="abonop_4" class="java.lang.Double" resetType="Group" resetGroup="tipo" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonop}]]></variableExpression>
+	</variable>
+	<variable name="abonod_2" class="java.lang.Float" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonod}]]></variableExpression>
+	</variable>
+	<variable name="abonop_5" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{abonop}]]></variableExpression>
+	</variable>
+	<group name="almacen">
+		<groupExpression><![CDATA[$F{almacen}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement x="4" y="1" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="20" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="16" width="572" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="49">
+				<staticText>
+					<reportElement x="400" y="7" width="26" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="3" width="572" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="426" y="7" width="70" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="496" y="21" width="75" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{abonod_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="496" y="36" width="75" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{abonop_5}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="461" y="36" width="33" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Pesos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="449" y="21" width="45" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Dolares]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="tipo">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="13">
+				<textField>
+					<reportElement x="256" y="0" width="100" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="45">
+				<line>
+					<reportElement x="0" y="2" width="572" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="400" y="5" width="26" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="426" y="5" width="70" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="494" y="18" width="76" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{abonod_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="494" y="31" width="76" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{abonop_4}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="461" y="31" width="33" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Pesos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="449" y="18" width="45" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Dolares]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="moneda">
+		<groupExpression><![CDATA[$F{moneda}]]></groupExpression>
+		<groupHeader>
+			<band height="34">
+				<textField>
+					<reportElement x="4" y="1" width="100" height="13"/>
+					<textElement>
+						<font isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="30" width="572" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="4" y="16" width="44" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Factura]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="59" y="16" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Cliente]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="400" y="16" width="54" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Fechapago]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="521" y="16" width="49" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Pago]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18">
+				<textField pattern="#,##0.00">
+					<reportElement x="496" y="5" width="75" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{abono_4}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="400" y="5" width="26" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="426" y="5" width="70" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="2" width="572" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="procedencia">
+		<groupExpression><![CDATA[$F{procedencia}]]></groupExpression>
+		<groupFooter>
+			<band height="15">
+				<textField pattern="#,##0.00">
+					<reportElement x="496" y="2" width="74" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{abono_2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="400" y="2" width="26" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="426" y="2" width="61" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{procedencia}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="factura">
+		<groupExpression><![CDATA[$F{idfactura}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="108" y="42" width="405" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombrerep}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="56" width="405" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape">
+				<reportElement x="10" y="10" width="76" height="66"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="108" y="15" width="405" height="17"/>
+				<textElement textAlignment="Center">
+					<font fontName="Franklin Gothic Demi" size="14"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA S.A. DE C.V]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="400" y="0" width="54" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechapago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="496" y="0" width="76" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{abono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="0" width="8" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{abonop}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="465" y="0" width="13" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{abonod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="0" width="44" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idfactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="0" width="20" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="0" width="307" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

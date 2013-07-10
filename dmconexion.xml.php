@@ -9,7 +9,7 @@
     <property name="Connected">1</property>
     <property name="DatabaseName">crm</property>
     <property name="Dictionary"></property>
-    <property name="Host">192.168.0.105</property>
+    <property name="Host">localhost</property>
     <property name="Name">conexion</property>
     <property name="UserName">root</property>
     <property name="UserPassword">freedom</property>

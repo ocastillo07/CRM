@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="movimientos" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="having" class="java.lang.String"/>
+	<parameter name="condicion1" class="java.lang.String"/>
+	<parameter name="condicion2" class="java.lang.String"/>
+	<parameter name="condicion3" class="java.lang.String"/>
+	<parameter name="condicion4" class="java.lang.String"/>
+	<parameter name="condicion5" class="java.lang.String"/>
+	<parameter name="condicion6" class="java.lang.String"/>
+	<parameter name="condicion7" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from (
+select "1" as tiporeporte,"Facturas" as nombrereporte,CapitalString(al.nombrecorto) as almacen,CapitalString(m.moneda) as moneda,
+if(procedencia='R','Refacciones',if(procedencia='S','Servicios','Camiones')) as procedencia,
+fechafactura as fecha,1 as folio, idfactura as documentoafectado,f.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente,fe.iniciales as estatus,
+round(subtotal,2) as subtotal,if(f.piva=11,round(iva,2),0) as iva1,if(f.piva=16,round(iva,2),0) as iva2,round(total,2) as total
+from facturas f
+left join clientes c on c.idcliente=f.idcliente
+left join realmacen al on al.idalmacen=f.idalmacen
+left join monedas m on m.idmoneda=f.idmoneda
+left join retipopagos tp on tp.idtipopago=f.idtipopago
+left join facturasestatus fe on fe.idestatus=f.idestatus
+left join usuarios u on u.idusuario=f.idpromotor
+$P!{condicion1}
+union
+
+select "2" as tiporeporte,"Notas de Cargo" as nombrereporte,
+CapitalString(al.nombrecorto) as almacen,CapitalString(m.moneda),"" as procedencia,
+nc.fechacreacion, 1 as folio, concat(nc.serie,nc.idnotacgo) as documentoafectado,nc.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente, nce.iniciales as estatus,
+round(subtotal,2) as subtotal,if(piva=11,round(iva,2),0) as iva1,if(piva=16,round(iva,2),0) as iva2,round(total,2) as total
+from notascargo nc
+left join clientes c on c.idcliente=nc.idcliente
+left join realmacen al on al.idalmacen=nc.idalmacen
+left join monedas m on m.idmoneda=nc.idmoneda
+left join notascargoestatus nce on nce.idestatus=nc.idestatus
+left join notascargotipos nt on nt.idtipo=nc.idtipo
+$P!{condicion2}
+union
+
+select "3" as tiporeporte, "Notas de Credito" as nombrereporte,
+CapitalString(al.nombrecorto) as almacen,CapitalString(m.moneda),"" as procedencia,
+nc.fechacreacion, concat(nc.serie,nc.idnotacred) as folio, nc.iddocumento as documentoafectado,
+nc.idcliente,if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente,nce.iniciales as estatus,
+round(subtotal,2) as subtotal,if(piva=11,round(iva,2),0) as iva1,if(piva=16,round(iva,2),0) as iva2, round(total,2) as total
+from notascredito nc
+left join clientes c on c.idcliente=nc.idcliente
+left join realmacen al on al.idalmacen=nc.idalmacen
+left join monedas m on m.idmoneda=nc.idmoneda
+left join notascreditoestatus nce on nce.idestatus=nc.idestatus
+left join notascreditotipos nt on nt.idtipo=nc.idtipo
+$P!{condicion3}
+union
+
+select "4" as tiporeporte, "Anticipos a Facturas" as nombrereporte,
+CapitalString(a.nombrecorto) as almacen, CapitalString(m.moneda) as moneda,"" as procedencia,
+pc.fechacreacion,an.idrecibo as folio, pc.iddocumento as documentoafectado,pc.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente, if(an.estatus=1,"Activo","Cancelado") as estatus,
+round(pc.abono,2) as importe, 0 as iva1, 0 as iva2, round(pc.abono,2) as total
+from ccpagosclientes pc
+inner join ccanticiposligados an on an.idfolioasignacion=pc.idcontador and pc.tipo="F"
+left join cctiposcobros tc on tc.idtipocobro=pc.idtipocobro
+left join realmacen a on a.idalmacen=pc.idalmacen
+left join monedas m on m.idmoneda=pc.idmoneda
+left join clientes c on c.idcliente=pc.idcliente
+$P!{condicion4}
+union
+
+select "6" as tiporeporte,"Pagos" as nombrereporte,CapitalString(al.nombrecorto) as almacen,
+CapitalString(m.moneda) as moneda,"" as procedencia,
+a.fecha,concat(a.serie,a.idrecibo) as folio, pc.iddocumento as documentoafectado,a.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente, if(a.estatus=1,"Activo","Cancelado") as estatus,
+round(a.total,2) as subtotal, 0 as iva1, 0 as iva2, round(a.total) as total
+from ccrecibos a
+left join ccrecibosdet b on a.serie=b.serie and a.idrecibo=b.idrecibo
+left join ccpagosclientes pc on pc.idcontador=b.idpago
+left join realmacen al on al.idalmacen=a.idalmacen
+left join monedas m on m.idmoneda=a.idmoneda
+left join clientes c on c.idcliente=a.idcliente
+where pc.tipo in ("F","N")
+$P!{condicion5}
+union
+
+select "6" as tiporeporte,"Pagos No Ligados" as nombrereporte,CapitalString(al.nombrecorto) as almacen,
+CapitalString(m.moneda) as moneda,"" as procedencia,
+a.fecha,concat(a.serie,a.idrecibo) as folio, pc.iddocumento as documentoafectado,a.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente, if(a.estatus=1,"Activo","Cancelado") as estatus,
+round(a.saldo,2) as subtotal, 0 as iva1, 0 as iva2, round(a.saldo) as total
+from ccrecibos a
+left join ccrecibosdet b on a.serie=b.serie and a.idrecibo=b.idrecibo
+left join ccpagosclientes pc on pc.idcontador=b.idpago
+left join realmacen al on al.idalmacen=a.idalmacen
+left join monedas m on m.idmoneda=a.idmoneda
+left join clientes c on c.idcliente=a.idcliente
+where pc.tipo in ("A") and a.saldo>0
+$P!{condicion6}
+UNION
+
+select "7" as tiporeporte,"Anticipos a Notas de Cargo" as nombrereporte,CapitalString(a.nombrecorto) as almacen,
+CapitalString(m.moneda) as moneda, "" as procedencia,
+pc.fechacreacion,an.idrecibo as folio, pc.iddocumento as documentoafectado,pc.idcliente,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),
+concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente, if(an.estatus=1,"Activo","Cancelado") as estatus,
+round(pc.abono,2) as importe, 0 as iva1, 0 as iva2, round(pc.abono,2) as total
+from ccpagosclientes pc
+inner join ccanticiposligados an on an.idfolioasignacion=pc.idcontador and pc.tipo="N"
+left join cctiposcobros tc on tc.idtipocobro=pc.idtipocobro
+left join realmacen a on a.idalmacen=pc.idalmacen
+left join monedas m on m.idmoneda=pc.idmoneda
+left join clientes c on c.idcliente=pc.idcliente
+$P!{condicion7}
+order by almacen,tiporeporte,moneda,procedencia,fecha
+) as t
+$P!{having}]]>
+	</queryString>
+	<field name="tiporeporte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombrereporte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="almacen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="procedencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="folio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="documentoafectado" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idcliente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="estatus" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="subtotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="iva1" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="iva2" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="subtotal_1" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
+	</variable>
+	<variable name="iva1_1" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{iva1}]]></variableExpression>
+	</variable>
+	<variable name="iva2_1" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{iva2}]]></variableExpression>
+	</variable>
+	<variable name="total_1" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="subtotal_2" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
+	</variable>
+	<variable name="subtotal_3" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
+	</variable>
+	<variable name="iva1_2" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{iva1}]]></variableExpression>
+	</variable>
+	<variable name="iva2_2" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{iva2}]]></variableExpression>
+	</variable>
+	<variable name="total_2" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<group name="almacen">
+		<groupExpression><![CDATA[$F{almacen}]]></groupExpression>
+	</group>
+	<group name="tipo">
+		<groupExpression><![CDATA[$F{tiporeporte}]]></groupExpression>
+	</group>
+	<group name="moneda" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{moneda}]]></groupExpression>
+		<groupHeader>
+			<band height="124">
+				<textField>
+					<reportElement x="54" y="107" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<image scaleImage="RetainShape">
+					<reportElement x="13" y="4" width="76" height="66"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="111" y="9" width="405" height="17"/>
+					<textElement textAlignment="Center">
+						<font fontName="Franklin Gothic Demi" size="14"/>
+					</textElement>
+					<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA S.A. DE C.V]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="111" y="50" width="405" height="17"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{periodo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="111" y="71" width="405" height="17"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nombrereporte}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="54" y="90" width="100" height="13"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="6" y="90" width="49" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Almacen:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="6" y="107" width="49" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Moneda:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="121" width="571" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="112" y="30" width="404" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Movimientos Capturados]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<textField pattern="#,##0.00">
+					<reportElement x="338" y="2" width="65" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{subtotal_3}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="403" y="2" width="59" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{iva1_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="462" y="2" width="54" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{iva2_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="516" y="2" width="56" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{total_2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="279" y="2" width="57" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="procedencia">
+		<groupExpression><![CDATA[$F{procedencia}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<textField>
+					<reportElement x="6" y="3" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{procedencia}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="22" width="55" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="55" y="22" width="55" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Folio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="110" y="13" width="55" height="22"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Documento Afectado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="208" y="22" width="55" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombre]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="348" y="22" width="55" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Importe]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="165" y="22" width="43" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cliente]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="306" y="22" width="38" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estatus]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="407" y="22" width="55" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Iva11]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="463" y="22" width="55" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Iva16]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="518" y="22" width="53" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="38" width="571" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<textField pattern="#,##0.00">
+					<reportElement x="338" y="0" width="65" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{subtotal_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="403" y="0" width="59" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{iva1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="462" y="0" width="54" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{iva2_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="516" y="0" width="56" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{total_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="281" y="0" width="55" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{procedencia}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="54" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="0" width="56" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""+$F{folio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="0" width="50" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""+$F{documentoafectado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="0" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="208" y="0" width="109" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="0" width="17" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{estatus}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="338" y="0" width="65" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{subtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="403" y="0" width="59" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{iva1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="0" width="54" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{iva2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="516" y="0" width="56" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

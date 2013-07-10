@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="antiguedadsaldos" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<parameter name="pfecha" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select "Antiguedad de saldos" as nombrerep,"Periodo" as periodo,almacen,idcliente,cliente,idfactura,
+moneda,fechafactura,fechavencimiento,sum(saldo) as saldo,sum(saldop) as saldop,sum(columna1)+sum(columna2)+sum(columna3)+sum(columna4) saldoven,
+sum(columna1p)+sum(columna2p)+sum(columna3p)+sum(columna4p) saldovenp,sum(xvencer) as xvencer,sum(xvencerp) as xvencerp,
+sum(columna1) as columna1,sum(columna1p) as columna1p,sum(columna2) as columna2,sum(columna2p) as columna2p,
+sum(columna3) as columna3,sum(columna3p) as columna3p, sum(columna4) as columna4,sum(columna4p) as columna4p,procedencia
+FROM(
+select almacen,idcliente,cliente,idfactura,moneda,fechafactura,fechavencimiento,
+round(saldo,2) as saldo,round(if(idmoneda=2,saldo*tc,saldo),2) as saldop,
+round(if(dias<0,saldo,0),2) as xvencer,round(if(dias<0,if(idmoneda=2,saldo*tc,saldo),0),2) as xvencerp,
+round(if(dias>=0 and dias<31,saldo,0),2) as columna1,round(if(dias>=0 and dias<31,if(idmoneda=2,saldo*tc,saldo),0),2) as columna1p,
+round(if(dias>30 and dias<61,saldo,0),2) as columna2,round(if(dias>30 and dias<61,if(idmoneda=2,saldo*tc,saldo),0),2) as columna2p,
+round(if(dias>60 and dias<91,saldo,0),2) as columna3,round(if(dias>60 and dias<91,if(idmoneda=2,saldo*tc,saldo),0),2) as columna3p,
+round(if(dias>90,saldo,0),2) as columna4, round(if(dias>90,if(idmoneda=2,saldo*tc,saldo),0),2) as columna4p, procedencia
+FROM
+(
+select a.nombrecorto as almacen,f.idcliente, idfactura,f.idmoneda,m.moneda,f.tc,
+(select saldo from ccpagosclientes pc where pc.iddocumento=f.idfactura and fechacreacion<=$P!{pfecha} order by idcontador desc limit 1) as saldo,
+fechafactura,fechavencimiento,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,
+if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente,
+DATEDIFF(curdate(),fechavencimiento) as dias,if(procedencia='R','Refacciones',if(procedencia='S','Servicio','Unidades Nuevas')) as procedencia
+from facturas f
+left join clientes c on c.idcliente=f.idcliente
+left join realmacen a on a.idalmacen=f.idalmacen
+left join monedas m on m.idmoneda=f.idmoneda
+where saldado=0 and f.fechafactura<=$P!{pfecha}  $P!{pcondicion}
+UNION
+select a.nombrecorto as almacen,ngo.idcliente, concat(ngo.serie,ngo.idnotacgo) as docto, ngo.idmoneda,m.moneda,ngo.tc,
+(select saldo from ccpagosclientes pc where pc.iddocumento=concat(ngo.serie,ngo.idnotacgo) and fechacreacion<=$P!{pfecha} order by idcontador desc limit 1) as saldo,ngo.fechacreacion,fechavencimiento,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,
+if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente,
+DATEDIFF(curdate(),fechavencimiento) as dias,if(procedencia='R','Refacciones',if(procedencia='S','Servicio','Unidades Nuevas')) as procedencia
+from notascargo ngo
+left join clientes c on c.idcliente=ngo.idcliente
+left join realmacen a on a.idalmacen=ngo.idalmacen
+left join monedas m on m.idmoneda=ngo.idmoneda
+where saldado=0 and ngo.fechacreacion<=$P!{pfecha}  $P!{pcondicion}
+) as t
+) as t GROUP BY almacen,moneda,procedencia,idcliente,idfactura]]>
+	</queryString>
+	<field name="nombrerep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="periodo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="almacen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idcliente" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idfactura" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechafactura" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechavencimiento" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="xvencer" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="columna1" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="columna2" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="columna3" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="columna4" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="procedencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String"/>
+	<field name="saldoven" class="java.lang.Double"/>
+	<field name="xvencerp" class="java.lang.Double"/>
+	<field name="columna1p" class="java.lang.Double"/>
+	<field name="columna2p" class="java.lang.Double"/>
+	<field name="columna3p" class="java.lang.Double"/>
+	<field name="columna4p" class="java.lang.Double"/>
+	<field name="saldovenp" class="java.lang.Double"/>
+	<field name="saldop" class="java.lang.Double"/>
+	<variable name="xvencer_1" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencer}]]></variableExpression>
+	</variable>
+	<variable name="columna1_1" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1}]]></variableExpression>
+	</variable>
+	<variable name="columna2_1" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2}]]></variableExpression>
+	</variable>
+	<variable name="columna3_1" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3}]]></variableExpression>
+	</variable>
+	<variable name="columna4_1" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4}]]></variableExpression>
+	</variable>
+	<variable name="xvencer_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencer}]]></variableExpression>
+	</variable>
+	<variable name="columna1_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1}]]></variableExpression>
+	</variable>
+	<variable name="columna2_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2}]]></variableExpression>
+	</variable>
+	<variable name="columna3_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3}]]></variableExpression>
+	</variable>
+	<variable name="columna4_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4}]]></variableExpression>
+	</variable>
+	<variable name="xvencer_3" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencer}]]></variableExpression>
+	</variable>
+	<variable name="columna1_3" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1}]]></variableExpression>
+	</variable>
+	<variable name="columna2_3" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2}]]></variableExpression>
+	</variable>
+	<variable name="columna3_3" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3}]]></variableExpression>
+	</variable>
+	<variable name="columna4_3" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4}]]></variableExpression>
+	</variable>
+	<variable name="xvencer_4" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencer}]]></variableExpression>
+	</variable>
+	<variable name="columna1_4" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1}]]></variableExpression>
+	</variable>
+	<variable name="columna2_4" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2}]]></variableExpression>
+	</variable>
+	<variable name="columna3_4" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3}]]></variableExpression>
+	</variable>
+	<variable name="columna4_4" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4}]]></variableExpression>
+	</variable>
+	<variable name="saldo_1" class="java.lang.Float" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="saldo_2" class="java.lang.Float" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="saldo_3" class="java.lang.Float" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="saldo_4" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="saldoven_1" class="java.lang.Double" resetType="Group" resetGroup="procedencia" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldoven}]]></variableExpression>
+	</variable>
+	<variable name="saldoven_2" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldoven}]]></variableExpression>
+	</variable>
+	<variable name="saldoven_3" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldoven}]]></variableExpression>
+	</variable>
+	<variable name="saldoven_4" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldoven}]]></variableExpression>
+	</variable>
+	<variable name="saldop_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldop}]]></variableExpression>
+	</variable>
+	<variable name="xvencerp_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencerp}]]></variableExpression>
+	</variable>
+	<variable name="columna1p_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1p}]]></variableExpression>
+	</variable>
+	<variable name="columna2p_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2p}]]></variableExpression>
+	</variable>
+	<variable name="columna3p_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3p}]]></variableExpression>
+	</variable>
+	<variable name="columna4p_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4p}]]></variableExpression>
+	</variable>
+	<variable name="saldovenp_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldovenp}]]></variableExpression>
+	</variable>
+	<variable name="saldop_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldop}]]></variableExpression>
+	</variable>
+	<variable name="xvencerp_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencerp}]]></variableExpression>
+	</variable>
+	<variable name="columna1p_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1p}]]></variableExpression>
+	</variable>
+	<variable name="columna2p_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2p}]]></variableExpression>
+	</variable>
+	<variable name="columna3p_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3p}]]></variableExpression>
+	</variable>
+	<variable name="columna4p_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4p}]]></variableExpression>
+	</variable>
+	<variable name="saldovenp_2" class="java.lang.Double" resetType="Group" resetGroup="almacen" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldovenp}]]></variableExpression>
+	</variable>
+	<variable name="saldo_5" class="java.lang.Float" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="xvencer_5" class="java.lang.Double" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{xvencer}]]></variableExpression>
+	</variable>
+	<variable name="columna1_5" class="java.lang.Double" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna1}]]></variableExpression>
+	</variable>
+	<variable name="columna2_5" class="java.lang.Double" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna2}]]></variableExpression>
+	</variable>
+	<variable name="columna3_5" class="java.lang.Double" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna3}]]></variableExpression>
+	</variable>
+	<variable name="columna4_5" class="java.lang.Double" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{columna4}]]></variableExpression>
+	</variable>
+	<variable name="saldoven_5" class="java.lang.Double" resetType="Group" resetGroup="cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldoven}]]></variableExpression>
+	</variable>
+	<group name="almacen">
+		<groupExpression><![CDATA[$F{almacen}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement x="73" y="6" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="21" width="752" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="23" width="752" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="8" y="6" width="62" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ALMACEN]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<line>
+					<reportElement x="0" y="2" width="752" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="199" y="5" width="24" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="223" y="5" width="56" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="279" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldop_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="347" y="5" width="64" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{xvencerp_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="414" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna1p_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="482" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna2p_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="550" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna3p_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="618" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna4p_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="687" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldovenp_2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="moneda">
+		<groupExpression><![CDATA[$F{moneda}]]></groupExpression>
+		<groupHeader>
+			<band height="29">
+				<line>
+					<reportElement x="0" y="26" width="752" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="73" y="10" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="8" y="10" width="62" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[MONEDA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="433" y="10" width="47" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[1 a 30]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="501" y="10" width="47" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[31 a 60]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="570" y="10" width="46" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[61 a 90]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="633" y="10" width="54" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Arial" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Mas de 90]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="309" y="1" width="36" height="22"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Saldo Total]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="377" y="1" width="36" height="22"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Saldo x vencer]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="714" y="1" width="39" height="22"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total Vencido]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<textField pattern="#,##0.00">
+					<reportElement x="347" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{xvencer_4}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="414" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna1_4}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="482" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna2_4}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="550" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna3_4}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="618" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna4_4}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="2" width="752" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="199" y="5" width="24" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="279" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{saldo_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="687" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldoven_2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="223" y="5" width="56" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="procedencia">
+		<groupExpression><![CDATA[$F{procedencia}]]></groupExpression>
+		<groupHeader>
+			<band height="24">
+				<textField>
+					<reportElement x="8" y="4" width="100" height="13"/>
+					<textElement>
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{procedencia}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="20" width="752" height="1"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<line>
+					<reportElement x="0" y="2" width="752" height="1"/>
+				</line>
+				<textField pattern="#,##0.00">
+					<reportElement x="347" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{xvencer_3}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="414" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna1_3}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="482" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna2_3}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="550" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna3_3}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="618" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna4_3}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="199" y="3" width="24" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement x="279" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{saldo_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="687" y="3" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldoven_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="223" y="3" width="56" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{procedencia}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="cliente">
+		<groupExpression><![CDATA[$F{idcliente}]]></groupExpression>
+		<groupHeader>
+			<band height="34">
+				<textField pattern="">
+					<reportElement x="10" y="3" width="23" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{idcliente}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="33" y="3" width="276" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="31" width="752" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="10" y="16" width="66" height="15"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Fecha Factura]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="95" y="16" width="66" height="15"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Factura]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="174" y="16" width="76" height="15"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Fecha Vencimiento]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement x="199" y="5" width="58" height="13"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total Cliente]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="279" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$V{saldo_5}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="347" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{xvencer_5}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="414" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna1_5}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="482" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna2_5}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="550" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna3_5}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="618" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna4_5}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="687" y="5" width="66" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldoven_5}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement x="174" y="3" width="405" height="17"/>
+				<textElement textAlignment="Center">
+					<font fontName="Franklin Gothic Demi" size="14"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA S.A. DE C.V]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="174" y="30" width="405" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombrerep}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape">
+				<reportElement x="70" y="0" width="76" height="66"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="347" y="2" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{xvencer}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="414" y="2" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="482" y="2" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="550" y="2" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="618" y="2" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna4}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="279" y="3" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="687" y="2" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{saldoven}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="279" y="2" width="0" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{saldop}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="349" y="2" width="25" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{xvencerp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="2" width="0" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna1p}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="2" width="0" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna2p}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="555" y="2" width="0" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna3p}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="622" y="2" width="0" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{columna4p}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="687" y="2" width="0" height="13" forecolor="#FFFFFF"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{saldovenp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="3" width="66" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""+$F{idfactura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="10" y="3" width="66" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechafactura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="174" y="3" width="66" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechavencimiento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="53" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="7" width="752" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="199" y="10" width="39" height="13"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="279" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldop_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="347" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{xvencerp_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="414" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna1p_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="482" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna2p_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="550" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna3p_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="618" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{columna4p_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="687" y="10" width="66" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{saldovenp_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ccestadocuenta_det" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="pcliente" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+t.almacen, t.idcliente,
+if(c.persona ="F", if(c.apaterno is NULL or c.apaterno="", c.nombre, if(c.amaterno is NULL or c.amaterno="",
+concat(c.nombre, " ", c.apaterno), concat(c.nombre, " ", c.apaterno, " ", c.amaterno))), c.rsocial) as cliente,
+concat(c.direccion, ' No. ', c.numero, ' Col.', c.colonia, ', ', c.municipio, ', ', c.estado) as dir,
+c.rfc, c.alta, c.telefono,
+if(c.creditoactivo, c.montocredito, 0) as montocredito,
+if(c.creditoactivo, c.montocreditocrm, 0) as montocreditocrm, c.saldoxcob, c.saldoxcobcrm, if(c.ultimaventa='0000-00-00', '', c.ultimaventa) as ultimaventa,
+idfactura, fechafactura, fechavencimiento, round(totalmn,2) as totalmn,
+round(saldo,2) as saldo, procedencia, vencido, xvencer
+
+FROM(
+SELECT a.clave as almacen,
+f.idcliente,
+f.idfactura,
+f.fechafactura,
+f.fechavencimiento,
+f.totalmn, round( if(f.idmoneda=1,  f.saldo, f.saldo*f.tc),2) as saldo,
+case f.procedencia when 'R' then 'REFACCIONES' when 'S' then 'SERVICIOS' when 'C' then 'UNIDADES' end as procedencia
+
+from facturas f
+left join realmacen a on a.idalmacen=f.idalmacen
+left join facturasestatus fe on fe.idestatus=f.idestatus
+where f.idcliente=$P!{pcliente}
+and fe.activo = 1
+UNION
+SELECT a.clave as almacen,
+pc.idcliente, pc.iddocumento as recibo , pc.fechacreacion, "0000-00-00",  0 as total, sum(pc.abono-pc.cargo) as saldo, "ANTICIPOS" as procedencia
+from ccpagosclientes pc
+left join ccrecibosdet rd on rd.idpago=pc.idcontador
+left outer join ccreciboscan rc on rc.serie=rd.serie and rc.idrecibo=rd.idrecibo
+left join realmacen a on a.idalmacen=pc.idalmacen
+where pc.idcliente=$P!{pcliente} and pc.movimiento in(3,4)
+group by recibo
+
+) as t
+left join clientes c on c.idcliente=t.idcliente
+
+join (
+select sum(vencido) as vencido, sum(xvencer) as xvencer from (
+SELECT
+round(if(f.fechavencimiento<=curdate(), if(f.idmoneda=1,  f.saldo, f.saldo*f.tc) , 0 ),2) as vencido,
+round(if(f.fechavencimiento>curdate(), if(f.idmoneda=1,  f.saldo, f.saldo*f.tc) , 0 ),2) as xvencer
+from facturas f
+left join realmacen a on a.idalmacen=f.idalmacen
+left join facturasestatus fe on fe.idestatus=f.idestatus
+where f.idcliente=$P!{pcliente}
+and fe.activo = 1 ) as v
+
+) as v
+
+where saldo <> 0]]>
+	</queryString>
+	<field name="idfactura" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechafactura" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechavencimiento" class="java.util.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalmn" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="procedencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vencido" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="xvencer" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="almacen" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="331" y="6" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PROCEDENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="6" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="6" width="31" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ALM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="6" width="70" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[SALDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="6" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VENCIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="6" width="71" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="6" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[FACTURA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="100" y="0" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechafactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="0" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{procedencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="31" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="0" width="71" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{totalmn}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idfactura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="200" y="0" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechavencimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="502" y="0" width="70" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

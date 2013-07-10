@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cambioprecios" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="390"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="periodo" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+c.fecha,
+c.existencia,
+c.cveparte,  p.descripcion,
+a.nombre as almacen,
+c.costoanterior,
+c.costonuevo,
+c.costonuevo-c.costoanterior as difcosto,
+c.precioanta,
+c.precionvoa,
+c.precionvoa-c.precioanta as difprecioa,
+c.precioantb,
+c.precionvob,
+c.precionvob-c.precioantb as difpreciob,
+c.precioantc,
+c.precionvoc,
+c.precionvoc-c.precioantc as difprecioc,
+c.precioantd,
+c.precionvod,
+c.precionvod-c.precioantd as difpreciod,
+c.precioante,
+c.precionvoe,
+c.precionvoe-c.precioante as difprecioe,
+c.usuario,
+c.hora
+FROM
+recambprecio AS c
+left join realmacen a on a.idalmacen = c.idalmacen
+left join repartes p on p.cveparte=c.cveparte
+$P!{pcondicion}
+order by cveparte]]>
+	</queryString>
+	<field name="fecha" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="existencia" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cveparte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="almacen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="costoanterior" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="costonuevo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="difcosto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioanta" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precionvoa" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="difprecioa" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioantb" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precionvob" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="difpreciob" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioantc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precionvoc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="difprecioc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioantd" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precionvod" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="difpreciod" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioante" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precionvoe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="difprecioe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="usuario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="existencia_1" class="java.lang.Integer" resetType="Group" resetGroup="cveparte" calculation="Count">
+		<variableExpression><![CDATA[$F{existencia}]]></variableExpression>
+	</variable>
+	<variable name="descripcion_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{descripcion}]]></variableExpression>
+	</variable>
+	<variable name="costoanterior_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{costoanterior}]]></variableExpression>
+	</variable>
+	<variable name="costonuevo_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{costonuevo}]]></variableExpression>
+	</variable>
+	<variable name="costonuevo_2" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{costonuevo}]]></variableExpression>
+	</variable>
+	<variable name="difcosto_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{difcosto}]]></variableExpression>
+	</variable>
+	<variable name="precioanta_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioanta}]]></variableExpression>
+	</variable>
+	<variable name="precionvoa_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoa}]]></variableExpression>
+	</variable>
+	<variable name="precionvoa_2" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoa}]]></variableExpression>
+	</variable>
+	<variable name="precioantb_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioantb}]]></variableExpression>
+	</variable>
+	<variable name="precionvob_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvob}]]></variableExpression>
+	</variable>
+	<variable name="difpreciob_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{difpreciob}]]></variableExpression>
+	</variable>
+	<variable name="precioantc_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioantc}]]></variableExpression>
+	</variable>
+	<variable name="precionvoc_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoc}]]></variableExpression>
+	</variable>
+	<variable name="difprecioc_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{difprecioc}]]></variableExpression>
+	</variable>
+	<variable name="precioantd_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioantd}]]></variableExpression>
+	</variable>
+	<variable name="precionvod_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvod}]]></variableExpression>
+	</variable>
+	<variable name="difpreciod_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{difpreciod}]]></variableExpression>
+	</variable>
+	<variable name="precioante_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioante}]]></variableExpression>
+	</variable>
+	<variable name="precionvoe_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoe}]]></variableExpression>
+	</variable>
+	<variable name="difprecioe_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{difprecioe}]]></variableExpression>
+	</variable>
+	<variable name="difprecioa_1" class="java.math.BigDecimal" resetType="Group" resetGroup="cveparte" calculation="Sum">
+		<variableExpression><![CDATA[$F{difprecioa}]]></variableExpression>
+	</variable>
+	<variable name="costoanterior_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{costoanterior}]]></variableExpression>
+	</variable>
+	<variable name="costonuevo_3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{costonuevo}]]></variableExpression>
+	</variable>
+	<variable name="difcosto_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{difcosto}]]></variableExpression>
+	</variable>
+	<variable name="precioanta_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioanta}]]></variableExpression>
+	</variable>
+	<variable name="precionvoa_3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoa}]]></variableExpression>
+	</variable>
+	<variable name="difprecioa_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{difprecioa}]]></variableExpression>
+	</variable>
+	<variable name="precioantb_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioantb}]]></variableExpression>
+	</variable>
+	<variable name="precionvob_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvob}]]></variableExpression>
+	</variable>
+	<variable name="difpreciob_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{difpreciob}]]></variableExpression>
+	</variable>
+	<variable name="precioantc_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioantc}]]></variableExpression>
+	</variable>
+	<variable name="precionvoc_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoc}]]></variableExpression>
+	</variable>
+	<variable name="difprecioc_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{difprecioc}]]></variableExpression>
+	</variable>
+	<variable name="precioantd_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioantd}]]></variableExpression>
+	</variable>
+	<variable name="precionvod_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvod}]]></variableExpression>
+	</variable>
+	<variable name="difpreciod_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{difpreciod}]]></variableExpression>
+	</variable>
+	<variable name="precioante_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precioante}]]></variableExpression>
+	</variable>
+	<variable name="precionvoe_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{precionvoe}]]></variableExpression>
+	</variable>
+	<variable name="difprecioe_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{difprecioe}]]></variableExpression>
+	</variable>
+	<group name="cveparte">
+		<groupExpression><![CDATA[$F{cveparte}]]></groupExpression>
+		<groupHeader>
+			<band height="53">
+				<rectangle>
+					<reportElement x="0" y="18" width="802" height="32"/>
+				</rectangle>
+				<staticText>
+					<reportElement mode="Opaque" x="40" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Existencia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="27" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Parte]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="640" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="675" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nuevo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="710" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Variacion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="748" y="38" width="27" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Usuario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="783" y="38" width="17" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Hora]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="83" y="20" width="105" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Costo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="310" y="20" width="105" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Precio B]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="198" y="20" width="105" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Precio A]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="422" y="20" width="105" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Precio C]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="530" y="20" width="105" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Precio D]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="640" y="20" width="105" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Precio E]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="530" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="600" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Variacion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="565" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nuevo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="422" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="492" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Variacion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="457" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nuevo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="310" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="380" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Variacion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="345" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nuevo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="198" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="268" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Variacion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="233" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nuevo]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="45" y="0" width="77" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cveparte}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="118" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nuevo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="83" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="153" y="38" width="35" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Variacion]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="122" y="0" width="595" height="12" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="5" y="38" width="26" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<line>
+					<reportElement x="78" y="20" width="1" height="28"/>
+				</line>
+				<line>
+					<reportElement x="188" y="20" width="1" height="28"/>
+				</line>
+				<line>
+					<reportElement x="303" y="20" width="1" height="28"/>
+				</line>
+				<line>
+					<reportElement x="414" y="20" width="1" height="28"/>
+				</line>
+				<line>
+					<reportElement x="526" y="20" width="1" height="28"/>
+				</line>
+				<line>
+					<reportElement x="635" y="20" width="1" height="28"/>
+				</line>
+				<line>
+					<reportElement x="744" y="20" width="1" height="28"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="34">
+				<textField>
+					<reportElement x="5" y="20" width="167" height="11"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Total Cambios de la parte "+$F{cveparte}+": "+$V{existencia_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="83" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{costoanterior_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="118" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{costonuevo_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="153" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difcosto_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="198" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioanta_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="233" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvoa_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="310" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioantb_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="345" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvob_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="380" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difpreciob_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="422" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioantc_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="457" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvoc_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="492" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difprecioc_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="530" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioantd_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="600" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difpreciod_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="565" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvod_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="640" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioante_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="675" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvoe_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="710" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difprecioe_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="268" y="5" width="35" height="10"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difprecioa_1}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="3" width="800" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="92">
+			<image scaleImage="RetainShape">
+				<reportElement x="134" y="3" width="76" height="76"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="244" y="34" width="388" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="244" y="49" width="388" height="13" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CAMBIO DE PRECIOS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="244" y="62" width="388" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{periodo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="244" y="16" width="388" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Franklin Gothic Demi" size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA, S.A. DE C.V.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="13">
+			<textField>
+				<reportElement x="1" y="2" width="44" height="10"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="83" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{costoanterior}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="118" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{costonuevo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="153" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{difcosto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="198" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precioanta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="268" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{difprecioa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="310" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precioantb}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="345" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precionvob}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="422" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precioantc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="457" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precionvoc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="492" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{difprecioc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="530" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precioantd}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="565" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precionvod}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="600" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{difpreciod}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="640" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precioante}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="675" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precionvoe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="710" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{difprecioe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="749" y="2" width="23" height="10"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="772" y="2" width="30" height="10"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hora}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="380" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{difpreciob}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="233" y="2" width="35" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{precionvoa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="45" y="2" width="30" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{existencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="29">
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="516" y="6" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="342" y="6" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="1" y="6" width="209" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="35">
+			<textField>
+				<reportElement x="1" y="18" width="100" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Total Cambios: "+$V{descripcion_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="83" y="5" width="35" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{costoanterior_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="118" y="5" width="35" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{costonuevo_3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="153" y="5" width="35" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difcosto_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="198" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioanta_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="233" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvoa_3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="268" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difprecioa_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="310" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioantb_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="345" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvob_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="380" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difpreciob_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="422" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioantc_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="488" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvoc_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="457" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difprecioc_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="530" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioantd_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="565" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvod_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="600" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difpreciod_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="640" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precioante_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="675" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{precionvoe_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="710" y="5" width="35" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{difprecioe_2}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="3" width="800" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

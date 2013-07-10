@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="horasequipo_tipoequipo" language="groovy" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<style name="Semaforo" isDefault="false" mode="Opaque" backcolor="#FF0000">
+        <conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean( $F{semaforo}.equals("NO SE REQUIERE") )]]></conditionExpression>
+			<style isDefault="false" style="Semaforo" mode="Opaque" backcolor="#0000FF"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean( $F{semaforo}.equals("CRITICO") )]]></conditionExpression>
+			<style isDefault="false" style="Semaforo" mode="Opaque" backcolor="#FF0000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean( $F{semaforo}.equals("BUENA") )]]></conditionExpression>
+			<style isDefault="false" style="Semaforo" mode="Opaque" backcolor="#FF9900"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean( $F{semaforo}.equals("MUY BUENA") )]]></conditionExpression>
+			<style isDefault="false" style="Semaforo" mode="Opaque" backcolor="#FFFF00"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean( $F{semaforo}.equals("EXCELENTE") )]]></conditionExpression>
+			<style isDefault="false" style="Semaforo" mode="Opaque" backcolor="#009900"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select tipo,
+ round(avg(disp), 2) as disp, round(avg(util),2) as util,
+case
+when  round(avg(disp), 2) = 0 then "NO SE REQUIERE"
+when  round(avg(disp), 2)  < 60 then "CRITICO"
+when  round(avg(disp), 2)  between 61 and 85 then "BUENA"
+when  round(avg(disp), 2)  between 86 and 95 then "MUY BUENA"
+when  round(avg(disp), 2)  > 95 then "EXCELENTE"
+end as semaforo
+
+from (
+SELECT t.nombre as tipo, t.idtipoequipo,
+round(avg(((h.hoperacion + h.hstandby) /12)*100), 2) as disp,
+round(avg((h.hoperacion/12)*100), 2) as util
+
+FROM
+horasequipo AS h
+left join equipo e on e.clave=h.claveequipo
+left join tipoequipo t on t.idtipoequipo=e.idtipoequipo
+
+ $P!{pcondicion}
+group by h.claveequipo
+)
+as h group by h.idtipoequipo
+order by h.idtipoequipo]]>
+	</queryString>
+	<field name="tipo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="disp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="util" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="semaforo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="disp_1" class="java.lang.Double" calculation="Average">
+		<variableExpression><![CDATA[$F{disp}]]></variableExpression>
+	</variable>
+	<variable name="util_1" class="java.lang.Double" calculation="Average">
+		<variableExpression><![CDATA[$F{util}]]></variableExpression>
+	</variable>
+	<variable name="semaforo_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{semaforo}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="57">
+			<staticText>
+				<reportElement x="89" y="26" width="424" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disponibilidad de Tipo de Equipo]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="240" height="18" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="240" y="0" width="91" height="18" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Disponibilidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="331" y="0" width="83" height="18" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Utilizacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="414" y="0" width="138" height="18" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Semaforo de Disp]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="0" width="240" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="77" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{disp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="0" width="83" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{util}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Semaforo" mode="Opaque" x="414" y="0" width="138" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{semaforo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26"/>
+	</pageFooter>
+	<summary>
+		<band height="40">
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="226" y="9" width="91" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{disp_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="317" y="9" width="83" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{util_1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="4" width="552" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="diarioventas_res" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select tipo, tiponombre, count(idservicio) as t, sum(totalmo) as totalmo, sum(totalref) as totalref, round(sum(totaltot),2) as totaltot,  sum(subtotal) as subtotal, sum(iva) as iva, sum(totalmn) as totalmn,  almacen
+from (
+Select servicio, idservicio, idtiposervicio, tipo, tiponombre, totalmo, totalref, sum(totaltot) as totaltot, subtotal, iva, totalmn, almacen
+from (
+Select concat(s.serie, s.idservicio) as servicio, s.idservicio, s.idtiposervicio,
+t.nombre as tipo, t.nombre as tiponombre,
+round(if(s.idmoneda=1, s.totalmo, s.totalmo*s.tc),2) as totalmo,
+round(if(s.idmoneda=1, s.totalref, s.totalref*s.tc),2) as totalref,
+if(ot.idmoneda=1, ot.total, ot.total*ot.tc) as totaltot,
+round(if(s.idmoneda=1, s.subtotal, s.subtotal*s.tc),2)as subtotal,
+round(if(s.idmoneda=1, s.iva, s.iva*s.tc),2) as iva,
+s.totalmn,  al.nombrecorto as almacen
+from seservicios s
+left join setiposervicios t on t.idtiposervicio=s.idtiposervicio
+left join seotrostalleres ot on concat(ot.serie, ot.idservicio)=concat(s.serie, s.idservicio)
+left join realmacen al on al.idalmacen=s.idalmacen
+$P!{pcondicion}
+) as s group by servicio
+) as t group by idtiposervicio
+order by tiponombre]]>
+	</queryString>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="t" class="java.lang.Long"/>
+	<field name="totalmn" class="java.lang.Float"/>
+	<field name="totalmo" class="java.lang.Float"/>
+	<field name="totalref" class="java.lang.Float"/>
+	<field name="totaltot" class="java.lang.Float"/>
+	<field name="subtotal" class="java.lang.Float"/>
+	<field name="iva" class="java.lang.Float"/>
+	<variable name="t_1" class="java.lang.Long" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{t}]]></variableExpression>
+	</variable>
+	<variable name="totalmn_1" class="java.lang.Float" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalmn}]]></variableExpression>
+	</variable>
+	<variable name="totalmo_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalmo}]]></variableExpression>
+	</variable>
+	<variable name="totalref_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalref}]]></variableExpression>
+	</variable>
+	<variable name="totaltot_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{totaltot}]]></variableExpression>
+	</variable>
+	<variable name="subtotal_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
+	</variable>
+	<variable name="iva_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{iva}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="13" width="100" height="14"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Ordenes]]></text>
+			</staticText>
+			<line>
+				<reportElement x="10" y="27" width="531" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="110" y="13" width="38" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="471" y="14" width="70" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total MN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="13" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mano Obra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="221" y="13" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Refacc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="13" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="14" width="70" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="14" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="2" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="2" width="38" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{t}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="221" y="2" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{totalref}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="281" y="2" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{totaltot}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="411" y="2" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{iva}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="341" y="2" width="70" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{subtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="161" y="2" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{totalmo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="471" y="2" width="70" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{totalmn}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="110" y="8" width="38" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$V{t_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="8" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de Ordenes]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="471" y="8" width="70" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{totalmn_1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="3" width="531" height="1"/>
+			</line>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="161" y="8" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{totalmo_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="231" y="8" width="50" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{totalref_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="281" y="8" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{totaltot_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="341" y="8" width="70" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{subtotal_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="411" y="8" width="60" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$V{iva_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cccierrecaja_sub" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<parameter name="pidalmacen" class="java.lang.Integer"/>
+	<parameter name="pcondicion2" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select almacen,pago,round(sum(refco),2) as refco,round(sum(refcr),2) as refcr,round(sum(serco),2) as serco,round(sum(sercr),2) as sercr,round(sum(unico),2) as unico,
+round(sum(unicr),2) as unicr,round(sum(refnc),2) as refnc,round(sum(sernc),2) as sernc,round(sum(uninc),2) as uninc,round(sum(recibos),2) as recibos,moneda
+FROM(
+select almacen,pago,if(procedencia='R' and idtipopago=1,total,0) as refco,if(procedencia='R' and idtipopago in (2) ,total,0) as refcr,
+if(procedencia='S' and idtipopago=1,total,0) as serco,if(procedencia='S' and idtipopago in (2),total,0) as sercr,
+if(procedencia='C' and idtipopago=1,total,0) as unico,if(procedencia='C' and idtipopago in (2),total,0) as unicr,
+if(procedencia='R' and idtipopago=3,total,0) as refnc,if(procedencia='S' and idtipopago=3,total,0) as sernc,
+if(procedencia='C' and idtipopago=3,total,0) as uninc,if(procedencia in ('A','NA') and idtipopago=0,total,0) as recibos,
+idmoneda,moneda,idalmacen
+from (
+#recibos
+select CapitalString(al.nombrecorto) as almacen,CapitalString(m.moneda) as moneda,
+if(pc.tipo='F',ifnull((select procedencia from facturas f where f.idfactura=pc.iddocumento), 'NA') ,if(pc.tipo='N',(select procedencia from notascargo ng where concat(ng.serie,ng.idnotacgo)=pc.iddocumento),pc.tipo)) as procedencia,
+concat(a.serie,a.idrecibo) as documento,pc.idcliente,tp.nombre as tipocobro,
+fp.iniciales as pago, round(a.total,2) as total,round(if(a.idmoneda=1,a.total,0),2) as totalmn,
+round(if(a.idmoneda=2,a.total,0),2) as totaldlls,a.fecha, a.idalmacen,a.idmoneda,
+if(pc.tipo='F',(select piva from facturas f where f.idfactura=pc.iddocumento),if(pc.tipo='N',
+(select piva from notascargo ng where concat(ng.serie,ng.idnotacgo)=pc.iddocumento),0)) as piva,
+if(pc.tipo='F',(select iva from facturas f where f.idfactura=pc.iddocumento),if(pc.tipo='N',
+(select iva from notascargo ng where concat(ng.serie,ng.idnotacgo)=pc.iddocumento),0)) iva,
+ifnull(if(pc.tipo='F',(select idtipopago from facturas f where f.idfactura=pc.iddocumento),0), 0) as idtipopago,"0" as idtipo
+from ccrecibos a
+left join ccrecibosdet b on a.serie=b.serie and a.idrecibo=b.idrecibo
+left join ccpagosclientes pc on pc.idcontador=b.idpago
+left join cctiposcobros tp on tp.idtipocobro=pc.idtipocobro
+left join ccformaspagos fp on pc.idformapago=fp.idformapago
+left join clientes c on c.idcliente=pc.idcliente
+left join realmacen al on al.idalmacen=pc.idalmacen
+left join monedas m on m.idmoneda=a.idmoneda
+left join ccbancos ban on ban.idbanco=pc.idbanco
+where a.estatus=1
+ $P!{pcondicion}
+group by a.serie,a.idrecibo
+UNION
+#contado
+select CapitalString(al.nombrecorto) as almacen,CapitalString(m.moneda) as moneda,f.procedencia,
+idfactura,pc.idcliente,tp.nombre as tipocobro,
+fp.iniciales as pago,
+round(pc.abono, 2 ) as total,
+round(if(pc.idmoneda=1,pc.abono,0),2) as totalmn,
+round(if(pc.idmoneda=2,pc.abono,0),2) as totaldlls,
+pc.fechacreacion,
+pc.idalmacen,pc.idmoneda,f.piva,f.iva,f.idtipopago,"0" as idtipo
+from ccpagosclientes pc
+left join facturas f on f.idfactura=pc.iddocumento
+left join cctiposcobros tp on tp.idtipocobro=pc.idtipocobro
+left join ccformaspagos fp on pc.idformapago=fp.idformapago
+left join clientes c on c.idcliente=pc.idcliente
+left join realmacen al on al.idalmacen=pc.idalmacen
+left join monedas m on m.idmoneda=pc.idmoneda
+left join ccbancos ban on ban.idbanco=pc.idbanco
+where movimiento in(1,9) and pc.tipo='F' and f.idtipopago=1 and pc.idcontador not in (select folioreferencia from ccpagosclientescan)
+ $P!{pcondicion}
+UNION
+#notas de credito
+select CapitalString(al.nombrecorto) as almacen,CapitalString(m.moneda) as moneda,
+if(pc.tipo='F',(select procedencia from facturas f where f.idfactura=nc.iddocumento),
+(select procedencia from notascargo ng where concat(ng.serie,ng.idnotacgo)=nc.iddocumento)) as procedencia,
+concat(nc.serie,nc.idnotacred),pc.idcliente,tp.nombre as tipocobro,
+fp.iniciales as pago,round(total*(-1),2) as total,
+round(if(pc.idmoneda=1,total*(-1),0),2) as totalmn,round(if(pc.idmoneda=2,total*(-1),0),2) as totaldlls,pc.fechacreacion,
+pc.idalmacen,pc.idmoneda,nc.piva,nc.iva,"3" as idtipopago,"0" as idtipo
+from ccpagosclientes pc
+left join notascredito nc on nc.iddocumento=pc.iddocumento
+left join cctiposcobros tp on tp.idtipocobro=pc.idtipocobro
+left join ccformaspagos fp on pc.idformapago=fp.idformapago
+left join clientes c on c.idcliente=pc.idcliente
+left join realmacen al on al.idalmacen=pc.idalmacen
+left join monedas m on m.idmoneda=pc.idmoneda
+left join ccbancos ban on ban.idbanco=pc.idbanco
+where movimiento=8  $P!{pcondicion}
+) as t  where idalmacen= $P{pidalmacen}  $P!{pcondicion2}
+) as a
+GROUP BY  almacen,idmoneda,pago
+order by almacen,moneda,pago]]>
+	</queryString>
+	<field name="almacen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="refco" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="refcr" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="serco" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sercr" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unico" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unicr" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="refnc" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sernc" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="uninc" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="recibos" class="java.lang.Double"/>
+	<variable name="total" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{refco}+$F{refcr}+$F{serco}+$F{sercr}+$F{unico}+$F{unicr}+$F{refnc}+$F{sernc}+$F{uninc}]]></variableExpression>
+	</variable>
+	<variable name="refcr_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{refcr}]]></variableExpression>
+	</variable>
+	<variable name="refco_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{refco}]]></variableExpression>
+	</variable>
+	<variable name="refcr_2" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{refcr}]]></variableExpression>
+	</variable>
+	<variable name="serco_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{serco}]]></variableExpression>
+	</variable>
+	<variable name="sercr_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{sercr}]]></variableExpression>
+	</variable>
+	<variable name="unico_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{unico}]]></variableExpression>
+	</variable>
+	<variable name="unicr_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{unicr}]]></variableExpression>
+	</variable>
+	<variable name="refnc_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{refnc}]]></variableExpression>
+	</variable>
+	<variable name="sernc_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{sernc}]]></variableExpression>
+	</variable>
+	<variable name="uninc_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{uninc}]]></variableExpression>
+	</variable>
+	<variable name="recibos_1" class="java.lang.Double" resetType="Group" resetGroup="moneda" calculation="Sum">
+		<variableExpression><![CDATA[$F{recibos}]]></variableExpression>
+	</variable>
+	<group name="moneda">
+		<groupExpression><![CDATA[$F{moneda}]]></groupExpression>
+		<groupHeader>
+			<band height="46">
+				<staticText>
+					<reportElement x="19" y="16" width="160" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Refacciones]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="184" y="16" width="160" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Servicio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="346" y="17" width="107" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Unidades]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="17" y="0" width="553" height="13"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="19" y="31" width="52" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Contado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="73" y="31" width="52" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Recibos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="127" y="31" width="53" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Notas Credito]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="238" y="31" width="52" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Recibos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="457" y="17" width="52" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Recibos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="347" y="31" width="52" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Recibos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="510" y="31" width="55" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="45" width="569" height="1"/>
+				</line>
+				<line>
+					<reportElement x="17" y="29" width="552" height="1"/>
+				</line>
+				<line>
+					<reportElement x="454" y="13" width="1" height="32"/>
+				</line>
+				<line>
+					<reportElement x="510" y="13" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="569" y="30" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="510" y="29" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="569" y="13" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="237" y="29" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="291" y="29" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="399" y="29" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="71" y="30" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="17" y="29" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="345" y="13" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="17" y="13" width="1" height="16"/>
+				</line>
+				<staticText>
+					<reportElement x="400" y="31" width="53" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Notas Credito]]></text>
+				</staticText>
+				<line>
+					<reportElement x="125" y="30" width="1" height="15"/>
+				</line>
+				<line>
+					<reportElement x="345" y="30" width="1" height="15"/>
+				</line>
+				<staticText>
+					<reportElement x="184" y="31" width="52" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Contado]]></text>
+				</staticText>
+				<line>
+					<reportElement x="181" y="30" width="1" height="15"/>
+				</line>
+				<line>
+					<reportElement x="181" y="13" width="1" height="16"/>
+				</line>
+				<staticText>
+					<reportElement x="292" y="31" width="53" height="13"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Notas Credito]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="17">
+				<textField pattern="#,##0.00">
+					<reportElement x="19" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{refco_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="73" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{refcr_2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="184" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{serco_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="238" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{sercr_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="347" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{unicr_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="511" y="3" width="55" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{refco_1}+$V{refcr_2}+$V{serco_1}+$V{sercr_1}+$V{unico_1}+$V{unicr_1}+$V{refnc_1}+$V{sernc_1}+$V{uninc_1}+$V{recibos_1}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="454" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="510" y="0" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="569" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="237" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="291" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="399" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="71" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="17" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="0" y="16" width="569" height="1"/>
+				</line>
+				<line>
+					<reportElement x="1" y="1" width="568" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="1" height="16"/>
+				</line>
+				<line>
+					<reportElement x="125" y="0" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement x="345" y="2" width="1" height="14"/>
+				</line>
+				<line>
+					<reportElement x="181" y="0" width="1" height="16"/>
+				</line>
+				<textField pattern="#,##0.00">
+					<reportElement x="127" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{refnc_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="292" y="3" width="52" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{sernc_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="400" y="3" width="53" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{uninc_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="456" y="3" width="53" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{recibos_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="1" y="0" width="15" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{pago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="19" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{refco}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="73" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{refcr}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="184" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{serco}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="238" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{sercr}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="347" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{unicr}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="511" y="0" width="55" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="454" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="510" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="569" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="237" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="399" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="17" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="291" y="0" width="1" height="13"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="400" y="0" width="53" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{uninc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="292" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{sernc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="127" y="0" width="52" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{refnc}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="71" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="125" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="345" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="181" y="0" width="1" height="13"/>
+			</line>
+			<textField>
+				<reportElement x="456" y="0" width="53" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{recibos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="48"/>
+	</summary>
+</jasperReport>

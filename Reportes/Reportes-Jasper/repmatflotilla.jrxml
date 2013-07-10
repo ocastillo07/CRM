@@ -1,0 +1,1248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repmatflotilla" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<style name="Title" isDefault="false" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" isDefault="false" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" isDefault="false" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" isDefault="false" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" isDefault="false" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style isDefault="false" style="Row" mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select day(fechaacarreo) as dia,
+fechaacarreo,
+concat(CASE WHEN MONTH(fechaacarreo) = 1 THEN "Enero"
+WHEN MONTH(fechaacarreo) = 2 THEN "Febrero"
+WHEN MONTH(fechaacarreo) = 3 THEN "Marzo"
+WHEN MONTH(fechaacarreo) = 4 THEN "Abril"
+WHEN MONTH(fechaacarreo) = 5 THEN "Mayo"
+WHEN MONTH(fechaacarreo) = 6 THEN "Junio"
+WHEN MONTH(fechaacarreo) = 7 THEN "Julio"
+WHEN MONTH(fechaacarreo) = 8 THEN "Agosto"
+WHEN MONTH(fechaacarreo) = 9 THEN "Septiembre"
+WHEN MONTH(fechaacarreo) = 10 THEN "Octubre"
+WHEN MONTH(fechaacarreo) = 11 THEN "Noviembre"
+WHEN MONTH(fechaacarreo) = 12 THEN "Diciembre" end
+, " ", year(fechaacarreo)) as mes,
+
+sinmin, sintep, sinbl,
+sinmineq,sintepeq,sinbleq,
+
+srmin, srtep, srbl,
+srmineq, srtepeq, srbleq,
+
+(sinmin+ sinmineq+srmin+ srmineq) as totmin,
+(sintep+ sintepeq+srtep+ srtepeq) as tottep,
+(sinbl+sinbleq+ srbl+srbleq) as totbl,
+
+(sinmin+ sinmineq+srmin+ srmineq)*80 as tonmin,
+(sintep+ sintepeq+srtep+ srtepeq)*80 as tontep,
+(sinbl+sinbleq+ srbl+srbleq)*80 as tonbl,
+
+((sinmin+ sinmineq+srmin+ srmineq) + (sintep+ sintepeq+srtep+ srtepeq))*80 as proddiaria
+
+from (
+
+Select fechaacarreo,
+sum(sinmin) as sinmin,
+sum(sintep)as sintep,
+sum(sinbl) as sinbl,
+sum(sinmineq) as sinmineq,
+sum(sintepeq) as sintepeq,
+sum(sinbleq) as sinbleq,
+
+sum(srmin) as srmin,
+sum(srtep) as srtep,
+sum(srbl) as srbl,
+sum(srmineq) as srmineq,
+sum(srtepeq) as srtepeq,
+sum(srbleq) as srbleq
+
+from (
+select
+m.fechaacarreo,
+if(m.idflotilla= 1, m.mineral, 0) as sinmin,
+if(m.idflotilla = 1, m.tepetate, 0) as sintep,
+if(m.idflotilla = 1, m.omov,  0) as sinbl,
+if(m.idflotilla = 3, m.mineral,  0) as sinmineq,
+if(m.idflotilla = 3, m.tepetate, 0) as sintepeq,
+if(m.idflotilla = 3, m.omov, 0) as sinbleq,
+if(m.idflotilla = 2, m.mineral, 0) as srmin,
+if(m.idflotilla = 2, m.tepetate, 0) as srtep,
+if(m.idflotilla = 2, m.omov,  0) as srbl,
+if(m.idflotilla = 4, m.mineral,  0) as srmineq,
+if(m.idflotilla = 4, m.tepetate, 0) as srtepeq,
+if(m.idflotilla = 4, m.omov, 0) as srbleq
+
+from matflotilla  m
+$P!{pcondicion}
+)
+as t
+group by fechaacarreo
+) as mat
+order by fechaacarreo]]>
+	</queryString>
+	<field name="dia" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaacarreo" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mes" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sinmin" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sintep" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sinbl" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sinmineq" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sintepeq" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sinbleq" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="srmin" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="srtep" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="srbl" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="srmineq" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="srtepeq" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="srbleq" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmin" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tottep" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totbl" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tonmin" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tontep" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tonbl" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="proddiaria" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="vsinmin" class="java.lang.String" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinmin}]]></variableExpression>
+	</variable>
+	<variable name="sinmin_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinmin}]]></variableExpression>
+	</variable>
+	<variable name="sintep_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{sintep}]]></variableExpression>
+	</variable>
+	<variable name="sinbl_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinbl}]]></variableExpression>
+	</variable>
+	<variable name="srmin_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{srmin}]]></variableExpression>
+	</variable>
+	<variable name="srtep_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{srtep}]]></variableExpression>
+	</variable>
+	<variable name="srbl_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{srbl}]]></variableExpression>
+	</variable>
+	<variable name="sinmineq_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinmineq}]]></variableExpression>
+	</variable>
+	<variable name="sintepeq_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{sintepeq}]]></variableExpression>
+	</variable>
+	<variable name="sinbleq_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinbleq}]]></variableExpression>
+	</variable>
+	<variable name="srmineq_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{srmineq}]]></variableExpression>
+	</variable>
+	<variable name="srtepeq_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{srtepeq}]]></variableExpression>
+	</variable>
+	<variable name="srbleq_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{srbleq}]]></variableExpression>
+	</variable>
+	<variable name="totmin_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{totmin}]]></variableExpression>
+	</variable>
+	<variable name="tottep_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{tottep}]]></variableExpression>
+	</variable>
+	<variable name="totbl_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{totbl}]]></variableExpression>
+	</variable>
+	<variable name="tonmin_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{tonmin}]]></variableExpression>
+	</variable>
+	<variable name="tontep_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{tontep}]]></variableExpression>
+	</variable>
+	<variable name="tonbl_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{tonbl}]]></variableExpression>
+	</variable>
+	<variable name="proddiaria_1" class="java.math.BigDecimal" resetType="Group" resetGroup="mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{proddiaria}]]></variableExpression>
+	</variable>
+	<variable name="sinmin_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinmin}]]></variableExpression>
+	</variable>
+	<variable name="sintep_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sintep}]]></variableExpression>
+	</variable>
+	<variable name="sinbl_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinbl}]]></variableExpression>
+	</variable>
+	<variable name="srmin_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{srmin}]]></variableExpression>
+	</variable>
+	<variable name="srtep_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{srtep}]]></variableExpression>
+	</variable>
+	<variable name="srbl_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{srbl}]]></variableExpression>
+	</variable>
+	<variable name="sinmineq_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinmineq}]]></variableExpression>
+	</variable>
+	<variable name="sintepeq_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sintepeq}]]></variableExpression>
+	</variable>
+	<variable name="sinbleq_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sinbleq}]]></variableExpression>
+	</variable>
+	<variable name="srmineq_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{srmineq}]]></variableExpression>
+	</variable>
+	<variable name="srtepeq_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{srtepeq}]]></variableExpression>
+	</variable>
+	<variable name="srbleq_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{srbleq}]]></variableExpression>
+	</variable>
+	<variable name="totmin_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{totmin}]]></variableExpression>
+	</variable>
+	<variable name="tottep_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{tottep}]]></variableExpression>
+	</variable>
+	<variable name="totbl_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{totbl}]]></variableExpression>
+	</variable>
+	<variable name="tonmin_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{tonmin}]]></variableExpression>
+	</variable>
+	<variable name="tontep_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{tontep}]]></variableExpression>
+	</variable>
+	<variable name="tonbl_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{tonbl}]]></variableExpression>
+	</variable>
+	<variable name="proddiaria_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{proddiaria}]]></variableExpression>
+	</variable>
+	<group name="mes">
+		<groupExpression><![CDATA[$F{mes}]]></groupExpression>
+		<groupHeader>
+			<band height="34">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="801" height="20" forecolor="#B89F7D" backcolor="#000000"/>
+				</frame>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="SubTitle" isPrintRepeatedValues="false" x="25" y="0" width="479" height="20" forecolor="#FFFFFF"/>
+					<textElement>
+						<font size="14" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{mes}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Column header" x="646" y="21" width="48" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tep]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="440" y="21" width="35" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[O.Mov.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="518" y="21" width="40" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tep]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="404" y="21" width="35" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tep]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="368" y="21" width="35" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Min]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="139" y="21" width="35" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Min]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="209" y="21" width="35" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[O.Mov.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="253" y="21" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Min]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="0" y="21" width="27" height="13" forecolor="#000000"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="288" y="21" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tep]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="323" y="21" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[O.Mov.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="740" y="21" width="60" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Prod. Tot Dia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="174" y="21" width="35" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tep]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="598" y="21" width="48" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Min]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="27" y="21" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Min]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="558" y="21" width="40" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[O.Mov.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="478" y="21" width="40" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Min]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="97" y="21" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[O.Mov.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="695" y="21" width="45" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[O.Mov.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" mode="Opaque" x="62" y="21" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tep]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="39">
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="27" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmin_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="62" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintep_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="97" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbl_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="139" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmin_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="209" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbl_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="174" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtep_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="253" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmineq_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="288" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintepeq_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="323" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbleq_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="368" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmineq_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="440" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbleq_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="404" y="7" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtepeq_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="478" y="7" width="40" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totmin_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="558" y="7" width="40" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totbl_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="518" y="7" width="40" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tottep_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="598" y="7" width="48" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tonmin_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="646" y="7" width="48" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tontep_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="695" y="7" width="45" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tonbl_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="740" y="7" width="60" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Number"><![CDATA[$V{proddiaria_1}/80]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="4" width="801" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="0" y="7" width="27" height="13"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Via]]></text>
+				</staticText>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="209" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbl_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="288" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintepeq_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="139" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmin_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="368" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmineq_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="323" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbleq_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="518" y="23" width="40" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tottep_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="174" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtep_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="440" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbleq_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="740" y="23" width="60" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Number"><![CDATA[$V{proddiaria_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="62" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintep_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="27" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmin_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="478" y="23" width="40" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totmin_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="253" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmineq_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="404" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtepeq_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="558" y="23" width="40" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totbl_1}*80]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement mode="Transparent" x="97" y="23" width="35" height="13" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbl_1}*80]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="23" width="25" height="13"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ton]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="21" width="800" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement x="189" y="6" width="424" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CALLE DEL COBRE #91 PARQUE INDUSTRIAL DYNATECH C.P. 85540]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="35" width="424" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HERMOSILLO, SONORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="58" width="424" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Requisiciones de Material y Servicios]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="20" width="424" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELS: (662) 251-08-13, 251-08-14 TEL/FAX: (662)- 251-08-09]]></text>
+			</staticText>
+			<image scaleImage="RetainShape">
+				<reportElement x="12" y="-3" width="85" height="81"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"logo.gif"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="27" y="7" width="105" height="13" backcolor="#C8C8C8"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FLOTILLASINERGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="132" y="7" width="119" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FLOTILLA M.S.R.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="358" y="7" width="117" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CF/M.S.R. a C-SIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="251" y="7" width="107" height="13" backcolor="#C8C8C8"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CF/SIN a C-M.S.R.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="598" y="7" width="140" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TONS TOTALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="478" y="7" width="120" height="13" backcolor="#C8C8C8"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIAJES TOTALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="740" y="7" width="60" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prod. Tot. Dia]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="801" height="13"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="0" y="0" width="27" height="13"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{dia}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="27" y="0" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{sinmin}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="62" y="0" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{sintep}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="97" y="0" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{sinbl}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="253" y="0" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{sinmineq}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="288" y="0" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{sintepeq}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="323" y="0" width="35" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{sinbleq}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="139" y="0" width="35" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{srmin}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="174" y="0" width="35" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{srtep}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="209" y="0" width="35" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{srbl}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="368" y="0" width="35" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{srmineq}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="404" y="0" width="35" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{srtepeq}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="440" y="0" width="35" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{srbleq}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="478" y="0" width="40" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmin}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="518" y="0" width="40" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{tottep}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="558" y="0" width="40" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totbl}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="598" y="0" width="48" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{tonmin}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="646" y="0" width="48" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{tontep}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" x="695" y="0" width="45" height="13"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{tonbl}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0">
+					<reportElement style="Detail" positionType="Float" mode="Opaque" x="740" y="0" width="60" height="13" forecolor="#000000" backcolor="#C8C8C8"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Number"><![CDATA[$F{proddiaria}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{COLUMN_COUNT}]]></printWhenExpression>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="1" y="1" width="800" height="24" forecolor="#D0B48E" backcolor="#000000"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="713" y="0" width="40" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="633" y="0" width="80" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="45" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="801" height="13" forecolor="#FFFFFF" backcolor="#C0C0C0"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="646" y="0" width="48" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tontep_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="404" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtepeq_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="209" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbl_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="323" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbleq_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="139" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmin_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="598" y="0" width="48" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tonmin_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="97" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbl_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="740" y="0" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{proddiaria_2}/80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="174" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtep_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="440" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbleq_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="695" y="0" width="45" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tonbl_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="478" y="0" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totmin_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="28" y="0" width="34" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmin_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="368" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmineq_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="558" y="0" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totbl_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="62" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintep_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="288" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintepeq_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="253" y="0" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmineq_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="518" y="0" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tottep_2}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="14" width="801" height="13" forecolor="#FFFFFF" backcolor="#C0C0C0"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="323" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbleq_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="139" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmin_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="404" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtepeq_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="288" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintepeq_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="478" y="14" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totmin_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="97" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinbl_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="558" y="14" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totbl_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="62" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sintep_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="740" y="14" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{proddiaria_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="518" y="14" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{tottep_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="28" y="14" width="34" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmin_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="209" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbl_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="368" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srmineq_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="174" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srtep_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="#,##0;#,##0-">
+				<reportElement x="440" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{srbleq_2}*80]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0;#,##0-">
+				<reportElement x="253" y="14" width="35" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sinmineq_2}*80]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="27" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Via]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="14" width="27" height="13"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ton]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

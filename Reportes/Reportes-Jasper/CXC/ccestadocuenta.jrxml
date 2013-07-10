@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ccestadocuenta" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="pcliente" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\Development\\Web\\ibc\\CXC\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT c.idcliente,
+if(c.persona ="F", if(c.apaterno is NULL or c.apaterno="", c.nombre, if(c.amaterno is NULL or c.amaterno="",
+concat(c.nombre, " ", c.apaterno), concat(c.nombre, " ", c.apaterno, " ", c.amaterno))), c.rsocial) as cliente,
+concat(c.direccion, ' No. ', c.numero, ' Col.', c.colonia, ', ', c.municipio, ', ', c.estado) as dir,
+c.rfc, c.alta, c.telefono,
+if(c.creditoactivo, c.montocredito, 0) as montocredito,
+if(c.creditoactivo, c.montocreditocrm, 0) as montocreditocrm, c.saldoxcob, c.saldoxcobcrm, if(c.ultimaventa='0000-00-00', '', c.ultimaventa) as ultimaventa,
+
+ifnull(vencido,0) vencido, ifnull(xvencer, 0) xvencer
+
+FROM clientes c
+
+join (
+select sum(vencido) as vencido, sum(xvencer) as xvencer from (
+SELECT
+round(if(f.fechavencimiento<=curdate(), if(f.idmoneda=1,  f.saldo, f.saldo*f.tc) , 0 ),2) as vencido,
+round(if(f.fechavencimiento>curdate(), if(f.idmoneda=1,  f.saldo, f.saldo*f.tc) , 0 ),2) as xvencer
+from facturas f
+left join realmacen a on a.idalmacen=f.idalmacen
+left join facturasestatus fe on fe.idestatus=f.idestatus
+where f.idcliente= $P!{pcliente}
+and fe.activo = 1 ) as v
+
+) as v
+where c.idcliente= $P!{pcliente}]]>
+	</queryString>
+	<field name="idcliente" class="java.lang.Integer"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="dir" class="java.lang.String"/>
+	<field name="rfc" class="java.lang.String"/>
+	<field name="alta" class="java.sql.Date"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="montocredito" class="java.lang.Float"/>
+	<field name="montocreditocrm" class="java.lang.Float"/>
+	<field name="saldoxcob" class="java.lang.Float"/>
+	<field name="saldoxcobcrm" class="java.lang.Float"/>
+	<field name="ultimaventa" class="java.lang.String"/>
+	<field name="vencido" class="java.lang.Double"/>
+	<field name="xvencer" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<staticText>
+				<reportElement x="267" y="30" width="133" height="55"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[CALLE 3 ORIENTE #126
+CD. INDUSTRIAL NUEVA TIJUANA
+TIJUANA, BAJA CALIFORNIA 22390
+TEL:  (664) 979.4422
+FAX: (664) 979.4408]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="30" width="147" height="67"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[CALZADA CIUDAD DEL SOL #2200
+COL. WISTERIA
+MEXICALI, BAJA CALIFORNIA 21147
+TEL:  (686) 904.6422
+FAX: (686) 904.6408
+clientes@ibc.com.mx]]></text>
+			</staticText>
+			<image scaleImage="RetainShape">
+				<reportElement x="10" y="10" width="89" height="87"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="120" y="89" width="432" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="416" y="30" width="143" height="67"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[AVENIDA REFORMA #541
+COLONIA ACAPULCO
+ENSENADA, BAJA CALIFORNIA 22890
+TEL:  (646) 120.8706
+FAX: (646) 120.8700
+	www.ibc.com.mx]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="10" width="431" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Franklin Gothic Demi" size="14" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA SA DE CV]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="119" y="0" width="432" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO DE CUENTA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="86" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="51" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="12" width="51" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Direccion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="24" width="51" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[RFC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="24" width="47" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Alta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="24" width="62" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="52" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Credito Ref. y Serv]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="52" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Credito unidades]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="52" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Saldo por cobrar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="52" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Saldo por cobrar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="52" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[F. Ultima Venta]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="51" y="0" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="0" width="421" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="51" y="12" width="521" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dir}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="51" y="24" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{rfc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="231" y="24" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{alta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="231" y="64" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{montocreditocrm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="64" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{montocredito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="64" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{saldoxcob}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="64" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{saldoxcobcrm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="475" y="64" width="100" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ultimaventa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="24" width="141" height="12"/>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="107" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="575" height="100"/>
+				<subreportParameter name="pcliente">
+					<subreportParameterExpression><![CDATA[$P{pcliente}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="relativepath">
+					<subreportParameterExpression><![CDATA[$P{relativepath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{relativepath} + "ccestadocuenta_det.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="361" y="0" width="100" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[POR VENCER]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="472" y="0" width="100" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{xvencer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="361" y="12" width="100" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VENCIDO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="472" y="12" width="100" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{vencido}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="kardexparte" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="12"/>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="periodosis" class="java.lang.String"/>
+	<parameter name="porden" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select  existreal, invini, saldoini,
+almacen, cveparte, parte, iddocto,
+kardexmov,
+fecha, hora,
+if(afectainventario=1, entradas,  0) as entradas,
+if(afectainventario=1, salidas, 0) as salidas, existencia, apartados, disponibles,
+enproceso, ordenados, entraspaso,
+if(afectainventario=1, debe, 0) as debe,
+if(afectainventario=1, haber, 0) as haber,
+@saldo := @saldo+if(afectainventario=1, (debe-haber) , 0) as saldo,  costo, ifnull(round(@saldo/existencia,2),0) as promedio, idcontador, idmovimiento, movimiento
+from (
+SELECT k.idcontador, k.idmovimiento, km.afectainventario,
+if(k.movimiento = 'E', k.cantidad, 0) as entradas,
+if(k.movimiento = 'S', k.cantidad, 0) as salidas,
+if(k.movimiento = 'E', round(k.cantidad*k.costo,2), 0) as debe,
+if(k.movimiento = 'S', round(k.cantidad*k.costo,2), 0) as haber,
+
+@saldo :=round(i.invini*k.costo,2),
+round(i.invini*k.costo,2) as saldoini,
+a.nombrecorto as almacen,
+k.cveparte, p.descripcion as parte, k.existencia, pm.existencia as existreal, k.apartados, k.disponibles,
+k.enproceso, k.ordenados, k.entraspaso,
+i.invini, k.iddocto, k.descripcion as kardexmov, k.cantidad,
+round(k.costo,2) as costo,
+k.movimiento, k.fecha, k.hora
+from rekardex k
+left join rekardexmov km on km.idmovimiento=k.idmovimiento
+left join realmacen a on a.idalmacen = k.idalmacen
+left join repartes p on p.cveparte = k.cveparte
+left join repartesmov pm on pm.cveparte=k.cveparte and pm.idalmacen=k.idalmacen
+left join repartesinventario i on i.cveparte=k.cveparte and i.periodo = $P!{periodosis} and i.idalmacen=k.idalmacen
+$P!{pcondicion}
+) as t order by cveparte, $P!{porden}, idcontador asc]]>
+	</queryString>
+	<field name="almacen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cveparte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="parte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="existencia" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="invini" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="iddocto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kardexmov" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="entradas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="costo" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="debe" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="haber" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.util.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="existreal" class="java.lang.String">
+		<fieldDescription><![CDATA[existreal]]></fieldDescription>
+	</field>
+	<field name="salidas" class="java.lang.Integer"/>
+	<field name="promedio" class="java.lang.Float"/>
+	<field name="saldoini" class="java.lang.Float"/>
+	<field name="apartados" class="java.lang.Integer"/>
+	<field name="disponibles" class="java.lang.Integer"/>
+	<field name="enproceso" class="java.lang.Integer"/>
+	<field name="entraspaso" class="java.lang.Integer"/>
+	<field name="ordenados" class="java.lang.Integer"/>
+	<variable name="cveparte_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{cveparte}]]></variableExpression>
+	</variable>
+	<group name="parte">
+		<groupExpression><![CDATA[$F{cveparte}]]></groupExpression>
+		<groupHeader>
+			<band height="102">
+				<staticText>
+					<reportElement mode="Opaque" x="10" y="7" width="37" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Parte:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="407" y="86" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Exist]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="10" y="57" width="127" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Saldo al Inicio del periodo:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="10" y="45" width="138" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Inventario Inicial al periodo:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="86" width="60" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Documento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="60" y="86" width="61" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descripcion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="353" y="86" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ent.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="715" y="77" width="84" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Costo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="576" y="86" width="40" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Debe]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="618" y="86" width="40" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Haber]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="290" y="86" width="22" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="47" y="7" width="89" height="12"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cveparte}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="137" y="7" width="415" height="12"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{parte}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="148" y="57" width="80" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[$F{saldoini}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="148" y="45" width="80" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{invini}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="148" y="33" width="80" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{existreal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="10" y="33" width="114" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Existencia Actual/Real:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="373" y="86" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sal.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="704" y="86" width="45" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Unitario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="662" y="86" width="40" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Saldo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="752" y="86" width="47" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Promedio]]></text>
+				</staticText>
+				<line>
+					<reportElement x="10" y="69" width="554" height="1"/>
+				</line>
+				<staticText>
+					<reportElement mode="Opaque" x="326" y="86" width="27" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Hora]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="455" y="86" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Apart]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="430" y="86" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Disp]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="480" y="86" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Proc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="504" y="87" width="20" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Trasp]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="530" y="86" width="22" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Orden]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="4"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="93">
+			<textField>
+				<reportElement x="203" y="39" width="397" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="203" y="28" width="397" height="13" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[MOVIMIENTOS POR PARTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="203" y="54" width="397" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{periodo}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape">
+				<reportElement x="10" y="10" width="76" height="76"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="203" y="10" width="397" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Franklin Gothic Demi" size="14" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA, S.A. DE C.V.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="5"/>
+	</columnHeader>
+	<detail>
+		<band height="10">
+			<textField>
+				<reportElement x="1" y="0" width="59" height="10"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{iddocto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="0" width="209" height="10"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{kardexmov}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="353" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{entradas}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="752" y="0" width="50" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{promedio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="576" y="0" width="40" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{debe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="618" y="0" width="40" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{haber}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="286" y="0" width="40" height="10"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{existencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="373" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{salidas}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="662" y="0" width="40" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="704" y="0" width="45" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{costo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="326" y="0" width="27" height="10"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Time"><![CDATA[$F{hora}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{apartados}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{disponibles}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{enproceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="504" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{enproceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="532" y="0" width="20" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{enproceso}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26">
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="516" y="6" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="342" y="6" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="1" y="6" width="209" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="21">
+			<textField>
+				<reportElement x="1" y="5" width="136" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Total de Movimientos: "+$V{cveparte_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

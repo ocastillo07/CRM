@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="idlfullservice_terminos2" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<parameter name="idvendedor" class="java.lang.String"/>
+	<parameter name="idtipo" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select terminos, if(u.apaterno is NULL or u.apaterno="", u.nombre, if(u.amaterno is NULL or u.amaterno="",
+concat(u.nombre, " ", u.apaterno), concat(u.nombre, " ", u.apaterno, " ", u.amaterno))) as vendedor
+from idlpropuestastipos join usuarios u
+where idusuario = $P!{idvendedor} and idtipopropuesta =  $P!{idtipo}]]>
+	</queryString>
+	<field name="terminos" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vendedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="12"/>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="23">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="24" y="0" width="495" height="20"/>
+				<textElement markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{terminos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band height="100">
+			<textField>
+				<reportElement x="24" y="50" width="495" height="14"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="24" y="64" width="495" height="20"/>
+				<textElement/>
+				<text><![CDATA[BAJA IDEALEASE SA DE CV]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

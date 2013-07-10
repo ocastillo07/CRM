@@ -1,0 +1,31 @@
+Editar el archivo /opt/jasper../ireport/ireport/fonts/irfonts.xml
+
+y agregar  como sigue
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+
+   <bean id="fontBean130334571071697706" class="net.sf.jasperreports.engine.fonts.SimpleFontFamily">
+       <property name="name" value="Franklin Gothic Demi"/>
+       <property name="normal" value="Fradm.TTF"/>
+       <property name="pdfEmbedded" value="false"/>
+   </bean>
+
+   <bean id="fontBean130334574322182412" class="net.sf.jasperreports.engine.fonts.SimpleFontFamily">
+       <property name="name" value="Arial"/>
+       <property name="normal" value="arial.ttf"/>
+       <property name="pdfEmbedded" value="false"/>
+   </bean>
+
+
+
+</beans>
+
+
+En el mismo folder agregar las letras

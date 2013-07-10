@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ofertas" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="idoferta" class="java.lang.Integer"/>
+	<parameter name="idrevision" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select concat(o.idoferta,"-",o.idrevision) as idoferta,p.nombre as plaza,
+p.rsocial,
+if(c.rsocial is NULL or c.rsocial="", if(c.apaterno is NULL or c.apaterno="",
+c.nombre, if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ", c.apaterno),
+concat(c.nombre, " ", c.apaterno, " ", c.amaterno))), c.rsocial)  as cliente,
+concat(c.direccion," ",c.numero," Col. ",c.colonia," CP",c.cp," ",c.municipio,", ",c.estado) as direccion,
+c.telefono,
+concat(u.nombre," ",u.apaterno," ",u.amaterno) as vendedor,
+concat(con.nombre," ",con.apaterno," ",con.amaterno) as contacto,
+ct.nombre as descripcion, o.ano, color as color,pro.clave as modelo,
+motor as motor, transmision as transmision, embrage as embrage,
+ejedelantero as ejedelantero,ejetrasero as ejetrasero,suspensiondelantera as suspensiondelantera,
+suspensiontrasera as suspensiontrasera,
+camarote as camarote, bastidor as bastidor, frenos as frenos,
+llantas as llantas,
+acondicionamiento as acondicionamiento, tanquescombustible as tanquescombustible,
+sistemadireccion as sistemadireccion,fechacreacion, specEspeciales as specEspeciales,
+concat("$",format(o.precio,2)) as precioventa, concat("$",format(descuento,2)) as descuento,
+concat("$",format(o.precio-descuento,2)) as preciototal,tiempoentrega as tiempoentrega,
+m.iniciales as moneda,torque as torque,
+group_concat(pdet.descripcion,CHAR(13) SEPARATOR '') as detalle
+from ofertas o
+left join ofertasdet odet on odet.idoferta=o.idoferta
+left join productos pdet on pdet.idproducto=odet.idproducto
+left join clientes c on c.idcliente=o.idcliente
+left join plazas p on p.idplaza=o.idplaza
+left join camionestipos ct  on ct.idtipo=o.idtipocamion
+left join clasificaciones cl on cl.idclasificacion= o.idestatus
+left join ofertasfases f on f.idfase=o.idfase
+left join usuarios u on u.idusuario=o.idvendedor
+left join contactos con on con.idcontacto=c.idcontacto and nivel=1
+left join productos pro on pro.clave=o.modelo
+left join productosdet pd on pd.idproducto=pro.idproducto
+left join monedas m on m.idmoneda=o.moneda
+where o.idoferta= $P{idoferta} and idrevision= $P{idrevision}]]>
+	</queryString>
+	<field name="idoferta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plaza" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="rsocial" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vendedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="contacto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ano" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="color" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="modelo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="motor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="transmision" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="embrage" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ejedelantero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ejetrasero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="suspensiondelantera" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="suspensiontrasera" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="camarote" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bastidor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="frenos" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="llantas" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="acondicionamiento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tanquescombustible" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sistemadireccion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechacreacion" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="specEspeciales" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioventa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descuento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="preciototal" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tiempoentrega" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="torque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="detalle" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="85">
+			<staticText>
+				<reportElement x="111" y="21" width="416" height="23"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="8" isItalic="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[NUESTRA POLITICA DE CALIDAD: "Ofrecer seguridad a nuestros clientes, mediante procesos de calidad, que mantendrán su carga en movimiento".]]></text>
+			</staticText>
+			<image scaleImage="RetainShape">
+				<reportElement x="17" y="3" width="83" height="81"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="111" y="5" width="416" height="16"/>
+				<textElement textAlignment="Center">
+					<font fontName="Franklin Gothic Demi" size="12" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/Fradm.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{rsocial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="112" y="44" width="416" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isItalic="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Calzada Cd. del Sol 2200, Col. Wisteria, Mexicali, B.C. CP 21147, Tel: (686)904.6422]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="56" width="416" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isItalic="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Calle 3 Oriente 126, Cd. Industrial Otay, Tijuana, B.C., CP 22390, Tel:(664)979.4422]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="68" width="416" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isItalic="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Ave. Reforma 541, Col. Acapulco, Ensenada, B.C., CP 22380, Tel: (646)120.8700]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="688">
+			<staticText>
+				<reportElement x="353" y="27" width="33" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Plaza:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="385" y="27" width="167" height="12"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{plaza}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="1" width="238" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[PREPARADO PARA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="14" width="341" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="353" y="40" width="63" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Cotización:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="53" width="238" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="353" y="1" width="200" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[REALIZADO POR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="353" y="14" width="201" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="91" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Descripción:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="91" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="104" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Año Modelo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="104" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="131" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Color:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="131" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{color}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="117" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Modelo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="117" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="144" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Motor:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="144" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{motor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="158" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Transmisión:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="158" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transmision}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="172" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Embrague:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="172" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{embrage}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="186" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Eje Delantero:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="186" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ejedelantero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="200" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Eje Trasero:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="200" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ejetrasero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="214" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Suspensión Delantera:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="214" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{suspensiondelantera}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="227" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Suspensión Trasera:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="227" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{suspensiontrasera}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="240" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Cabina:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="240" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{camarote}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="254" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Bastidor:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="254" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bastidor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="267" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Frenos:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="267" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{frenos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="281" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Ruedas/Llantas:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="281" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{llantas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="295" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Tanques de Combustible:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="295" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tanquescombustible}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="324" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Configuración Especial:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="16" y="391" width="536" height="72"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{specEspeciales}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="44" y="489" width="42" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[TOTAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="502" width="232" height="28"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[semanas a partir de la formalizacion del pedido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="509" width="216" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[TIEMPO DE ENTREGA DE LA UNIDAD:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="205" y="509" width="82" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tiempoentrega}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="353" y="53" width="200" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="416" y="40" width="85" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="10" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idoferta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="70" width="555" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0" lineStyle="Dashed"/>
+					<topPen lineWidth="0.0" lineStyle="Dashed"/>
+					<leftPen lineWidth="0.0" lineStyle="Dashed"/>
+					<bottomPen lineWidth="0.0" lineStyle="Dashed"/>
+					<rightPen lineWidth="0.0" lineStyle="Dashed"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="14" isBold="true" isItalic="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[COTIZACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="489" width="340" height="13"/>
+				<textElement>
+					<font fontName="Calibri" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[mas IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="530" width="100" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Atentamente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="530" width="100" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Aceptado Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="625" width="511" height="63"/>
+				<textElement>
+					<font fontName="Calibri" size="8" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[1.- Cotización válida por 30 días naturales y sujeta a cambio sin previo aviso.
+2.- Para efectos de facturación en pesos, se utilizará el tipo de cambio DOF del día mas 10 centavos.
+3.- Para apartar o enviar a producción, se requiere anticipo de $5,000 USD por vehículo y firma de aceptado.
+4.- Lugar de entrega: Libre a Bordo en las instalaciones del Proveedor.
+5.- La presente oferta no incluye placas, tenencia ni seguro de la unidad.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="16" y="575" width="216" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="287" y="590" width="218" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="289" y="575" width="216" height="1"/>
+			</line>
+			<line>
+				<reportElement x="16" y="574" width="216" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="476" width="89" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descuento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="489" width="89" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{preciototal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="44" y="463" width="42" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[PRECIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="476" width="70" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[DESCUENTO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="463" width="25" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="155" y="324" width="397" height="67"/>
+				<textElement>
+					<font fontName="Calibri" size="8" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{detalle}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="27" width="341" height="13"/>
+				<textElement>
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="40" width="340" height="13"/>
+				<textElement>
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{contacto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="463" width="89" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{precioventa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="308" width="397" height="13"/>
+				<textElement>
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{torque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="308" width="128" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" size="10" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Torque:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="476" width="25" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="489" width="25" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Calibri" isBold="false" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="590" width="215" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[International de Baja California, S.A. de C.V.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="612" width="215" height="13"/>
+				<textElement>
+					<font fontName="Calibri" size="8" isBold="true" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/CALIBRIB.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[TERMINOS Y CONDICIONES]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="287" y="576" width="218" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" pdfFontName="/opt/jasperserver-ce-3.7.0/apache-tomcat/webapps/ROOT/calibri.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{contacto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

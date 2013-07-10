@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="refcierremen" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[Select t.cveparte, p.descripcion as parte, a.nombrecorto as almacen, t.idalmacen, l.cvlinea, pm.existencia,
+
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2))  from periodos where date_sub(curdate(), interval 11 month)  between fecha1 and fecha2 ), '-') as p1,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 10 month)  between fecha1 and fecha2 ), '-') as p2,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 9 month)  between fecha1 and fecha2 ), '-')  as p3,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 8 month)  between fecha1 and fecha2 ), '-')  as p4,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 7 month)  between fecha1 and fecha2 ), '-') as p5,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 6 month)  between fecha1 and fecha2 ), '-')  as p6,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 5 month)  between fecha1 and fecha2 ), '-') as p7,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 4 month)  between fecha1 and fecha2 ), '-')  as p8,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 3 month)  between fecha1 and fecha2 ), '-')  as p9,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 2 month)  between fecha1 and fecha2 ), '-') as p10,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where date_sub(curdate(), interval 1 month)  between fecha1 and fecha2 ), '-') as p11,
+ifnull(( Select concat(right(cveperiodo,2), '/',mid(cveperiodo, 3,2)) from periodos where curdate()  between fecha1 and fecha2 ), '-') as p12,
+
+sum(invfin1) as totmes1,
+sum(invfin2) as totmes2,
+sum(invfin3) as totmes3,
+sum(invfin4) as totmes4,
+sum(invfin5) as totmes5,
+sum(invfin6) as totmes6,
+sum(invfin7) as totmes7,
+sum(invfin8) as totmes8,
+sum(invfin9) as totmes9,
+sum(invfin10) as totmes10,
+sum(invfin11) as totmes11,
+sum(invfin12) as totmes12,
+
+sum(invfin1)+sum(invfin2)+sum(invfin3)+sum(invfin4)+sum(invfin5)+sum(invfin6)+sum(invfin7)+sum(invfin8)+sum(invfin9)+sum(invfin10)+sum(invfin11)+sum(invfin12) as total,
+
+round((sum(invfin1)+sum(invfin2)+sum(invfin3)+sum(invfin4)+sum(invfin5)+sum(invfin6)+sum(invfin7)+sum(invfin8)+sum(invfin9)+sum(invfin10)+sum(invfin11)+sum(invfin12))/12,2) as prom,
+
+round(if(pm.idmoneda=1, pm.costo, pm.costo*(select compra from tiposcambio order by idcontador desc limit 1)),2) as costo,
+
+round(sum(invfin1)+sum(invfin2)+sum(invfin3)+sum(invfin4)+sum(invfin5)+sum(invfin6)+sum(invfin7)+sum(invfin8)+sum(invfin9)+sum(invfin10)+sum(invfin11)+sum(invfin12)*
+if(pm.idmoneda=1, pm.costo, pm.costo*(select compra from tiposcambio order by idcontador desc limit 1)),2) as totalcosto,
+
+e.iniciales as estatus, pm.pasillo, pm.ubicacion
+from (
+Select t.cveparte, t.idalmacen, t.periodo,
+
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 11 month)  between fecha1 and fecha2 ), t.invfin, 0) as invfin1,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 10 month)  between fecha1 and fecha2 ), t.invfin, 0) as invfin2,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 9 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin3,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 8 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin4,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 7 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin5,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 6 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin6,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 5 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin7,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 4 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin8,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 3 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin9,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 2 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin10,
+if(t.periodo=( Select cveperiodo from periodos where date_sub(curdate(), interval 1 month)  between fecha1 and fecha2 ), t.invfin, 0)  as invfin11,
+if(t.periodo=( Select cveperiodo from periodos where curdate()  between fecha1 and fecha2 ), t.invfin, 0) as invfin12
+
+from repartesinventario as t
+$P!{pcondicion}
+) as t
+left join repartesmov pm on pm.cveparte=t.cveparte and pm.idalmacen=t.idalmacen
+left join realmacen a on a.idalmacen=t.idalmacen
+left join repartesestatus e on e.idestatus=pm.idestatus
+left join repartes p on p.cveparte=pm.cveparte
+left join relineas l on l.idlinea = p.idlinea
+$P!{pcondicion}
+group by idalmacen, cveparte
+order by idalmacen, estatus, cvlinea, cveparte]]>
+	</queryString>
+	<field name="cveparte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="parte" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="almacen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idalmacen" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cvlinea" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="existencia" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p3" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p4" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p5" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p6" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p7" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p8" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p9" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p10" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p11" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p12" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes1" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes2" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes3" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes4" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes5" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes6" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes7" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes8" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes9" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes10" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes11" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmes12" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="prom" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalcosto" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="estatus" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pasillo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ubicacion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="costo" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="totalcosto_1" class="java.lang.Double" resetType="Group" resetGroup="estatus" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalcosto}]]></variableExpression>
+	</variable>
+	<variable name="costo_1" class="java.lang.Double" resetType="Group" resetGroup="estatus" calculation="Sum">
+		<variableExpression><![CDATA[$F{costo}]]></variableExpression>
+	</variable>
+	<variable name="existencia_1" class="java.lang.Integer" resetType="Group" resetGroup="estatus" calculation="Sum">
+		<variableExpression><![CDATA[$F{existencia}]]></variableExpression>
+	</variable>
+	<variable name="prom_1" class="java.math.BigDecimal" resetType="Group" resetGroup="estatus" calculation="Average">
+		<variableExpression><![CDATA[$F{prom}]]></variableExpression>
+	</variable>
+	<variable name="total_1" class="java.math.BigDecimal" resetType="Group" resetGroup="estatus" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<group name="estatus">
+		<groupExpression><![CDATA[$F{estatus}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<staticText>
+					<reportElement mode="Opaque" x="1" y="10" width="169" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Parte]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="240" y="10" width="22" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Linea]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="266" y="10" width="21" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Exist]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="776" y="10" width="20" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="741" y="10" width="25" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Prom]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="335" y="10" width="30" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="1" y="0" width="47" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estatus:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="376" y="10" width="25" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Pas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="401" y="10" width="20" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ubic]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="432" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="457" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="482" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p3}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="507" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p4}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="532" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p5}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="557" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p6}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="582" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p7}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="607" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p8}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="632" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p9}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="657" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p10}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="682" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p11}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="706" y="10" width="25" height="12"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{p12}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="297" y="10" width="30" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Costo]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="48" y="0" width="122" height="9"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{estatus}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18">
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="335" y="5" width="27" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{totalcosto_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="297" y="5" width="30" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{costo_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="266" y="5" width="21" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{existencia_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="741" y="5" width="25" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{prom_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="776" y="5" width="20" height="11"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{total_1}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="3" width="802" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="87">
+			<image scaleImage="RetainShape">
+				<reportElement x="121" y="7" width="76" height="76"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"international.gif"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="235" y="41" width="388" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{almacen}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="235" y="56" width="388" height="13" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE CIERRE DE MES [INVENTARIO]]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="21" width="388" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Franklin Gothic Demi" size="14" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[INTERNATIONAL DE BAJA CALIFORNIA SA DE CV]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="6"/>
+	</columnHeader>
+	<detail>
+		<band height="11">
+			<textField>
+				<reportElement x="1" y="0" width="62" height="9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cveparte}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="0" width="170" height="9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{parte}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="22" height="9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cvlinea}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="266" y="0" width="21" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{existencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="432" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="457" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="482" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="507" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="532" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="557" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes6}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="582" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes7}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="607" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes8}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="632" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes9}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="657" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes10}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="682" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes11}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="706" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{totmes12}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="776" y="0" width="20" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="741" y="0" width="25" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{prom}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="335" y="0" width="30" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{totalcosto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="376" y="0" width="25" height="9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{pasillo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="401" y="0" width="20" height="9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ubicacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="297" y="0" width="30" height="9"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{costo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26">
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="756" y="7" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="582" y="7" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="1" y="6" width="209" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Produccion" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="fecha1" class="java.lang.String"/>
+	<parameter name="fecha2" class="java.lang.String"/>
+	<parameter name="relativepath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select fechacreacion,min1*ton as min1,min2*ton as min2,(min1*ton+min2*ton) as totmin,
+tepe1*80 as tepe1,tepe2*80 as tepe2, (tepe1*ton+tepe2*ton) as tottepe,baja1*ton as baja1,baja2*ton as baja2,(baja1*ton+baja2*ton) as totbaja,
+(min1*ton+min2*ton)+(tepe1*ton+tepe2*ton) as total
+from(
+select fechacreacion,sum(if(idturno=24,mineral,0)) as min1,sum(if(idturno=25,mineral,0)) as min2,
+sum(if(idturno=24,tepetate,0)) as tepe1,sum(if(idturno=25,tepetate,0)) as tepe2,
+sum(if(idturno=24,bajaley,0)) as baja1,sum(if(idturno=25,bajaley,0)) as baja2,(select valor from configuraciones where concepto="toneladasxcamion") as ton
+from (
+SELECT
+pro.fechacreacion,pro.idturno,
+Sum(paca.Min_Tolva)+Sum(paca.Min_Stock) as mineral,
+Sum(paca.Tepetate) as tepetate,
+Sum(paca.BajaLey) as bajaley
+FROM
+prod_acarreo AS paca
+Inner Join produccion AS pro ON paca.idproduccion = pro.idcontador
+where fechacreacion between $P{fecha1} and $P{fecha2}
+GROUP BY
+pro.fechacreacion,idturno
+) as t
+group by fechacreacion) as tab
+ORDER BY fechacreacion]]>
+	</queryString>
+	<field name="fechacreacion" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="min1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="min2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totmin" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tepe1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tepe2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tottepe" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="baja1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="baja2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totbaja" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="totmin" class="java.lang.String"/>
+	<variable name="min1_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{min1}]]></variableExpression>
+	</variable>
+	<variable name="min2_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{min2}]]></variableExpression>
+	</variable>
+	<variable name="totmin_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{totmin}]]></variableExpression>
+	</variable>
+	<variable name="tepe1_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{tepe1}]]></variableExpression>
+	</variable>
+	<variable name="tepe2_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{tepe2}]]></variableExpression>
+	</variable>
+	<variable name="tottepe_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{tottepe}]]></variableExpression>
+	</variable>
+	<variable name="tottepe_2" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{tottepe}]]></variableExpression>
+	</variable>
+	<variable name="baja1_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{baja1}]]></variableExpression>
+	</variable>
+	<variable name="baja2_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{baja2}]]></variableExpression>
+	</variable>
+	<variable name="totbaja_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{totbaja}]]></variableExpression>
+	</variable>
+	<variable name="total_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="80">
+			<staticText>
+				<reportElement x="89" y="59" width="424" height="18"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Produccion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="17" width="424" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELS: (662) 251-08-13, 251-08-14 TEL/FAX: (662)- 251-08-09]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="3" width="424" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CALLE DEL COBRE #91 PARQUE INDUSTRIAL DYNATECH C.P. 85540]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="32" width="424" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HERMOSILLO, SONORA]]></text>
+			</staticText>
+			<image scaleImage="RetainShape">
+				<reportElement x="3" y="2" width="85" height="81"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{relativepath}+"logo.gif"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="35">
+			<staticText>
+				<reportElement mode="Opaque" x="119" y="6" width="98" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MINERAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="73" y="22" width="46" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="119" y="22" width="31" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1ER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="150" y="22" width="31" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2DO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="217" y="22" width="31" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1ER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="248" y="22" width="31" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2DO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="319" y="22" width="31" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1ER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="350" y="22" width="31" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2DO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="217" y="6" width="103" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TEPETATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="320" y="6" width="101" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAJA LEY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="177" y="22" width="40" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="279" y="22" width="40" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="421" y="6" width="50" height="29" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[TOTAL SINERGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="381" y="22" width="40" height="13" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="73" y="6" width="46" height="16" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="73" y="2" width="46" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fechacreacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="119" y="2" width="30" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{min1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="149" y="2" width="29" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{min2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="218" y="2" width="30" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tepe1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="249" y="2" width="30" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tepe2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="320" y="2" width="30" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{baja1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="350" y="2" width="30" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{baja2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="178" y="2" width="39" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totmin}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="282" y="2" width="37" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{tottepe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="381" y="2" width="40" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totbaja}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="428" y="2" width="40" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<summary>
+		<band height="21">
+			<textField pattern="#,##0">
+				<reportElement x="119" y="2" width="30" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{min1_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="149" y="2" width="28" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{min2_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="178" y="2" width="39" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{totmin_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="218" y="2" width="30" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{tepe1_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="251" y="2" width="28" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{tepe2_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="282" y="2" width="37" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{tottepe_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="320" y="2" width="30" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{baja1_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="350" y="2" width="30" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{baja2_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="381" y="2" width="40" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{totbaja_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="428" y="2" width="40" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{total_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="73" y="2" width="46" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

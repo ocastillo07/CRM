@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ccfacturaspagadas_det" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<parameter name="pcondicion" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select formapago,sum(refaccionesmxp) as Refaccionesmxp,sum(refaccionesdlls) as Refaccionesdlls,
+sum(serviciomxp) as Serviciomxp,sum(serviciodlls) as Serviciodlls,sum(unidadesmxp) as Unidadesmxp,sum(unidadesmxp) as Unidadesdlls,unidadesdlls
+from (
+select formapago,if(procedencia='R', round(sum(abonomxp),2),0) as Refaccionesmxp,if(procedencia='R', round(sum(abonodlls),2),0) as Refaccionesdlls,
+if(procedencia='S',round(sum(abonomxp),2),0) as Serviciomxp,if(procedencia='S',round(sum(abonodlls),2),0) as Serviciodlls,
+if(procedencia='C',round(sum(abonomxp),2),0) as Unidadesmxp,if(procedencia='C',round(sum(abonodlls),2),0) as Unidadesdlls
+from (
+select idfactura,fp.nombre as formapago,b.nombre as banco, pc.fechacreacion as fechapago,
+if(pc.idmoneda=1,pc.abono,0) as abonomxp,if(pc.idmoneda=2,pc.abono,0) as abonodlls,
+if(c.persona ="F",if(c.apaterno is NULL or c.apaterno="",c.nombre,
+if(c.amaterno is NULL or c.amaterno="",concat(c.nombre, " ",c.apaterno),concat(c.nombre, " ",c.apaterno," ", c.amaterno))), c.rsocial) as cliente,
+f.procedencia
+from facturas f
+left join clientes c on c.idcliente=f.idcliente
+left join ccpagosclientes pc on pc.iddocumento=f.idfactura
+left join ccbancos b on b.idbanco=pc.idbanco
+left join ccformaspagos fp on fp.idformapago=pc.idformapago
+left join ccmovimientos mv on mv.idmovimiento=pc.movimiento
+left join realmacen a on a.idalmacen=f.idalmacen
+left join monedas m on m.idmoneda=f.idmoneda
+left join retipopagos t on t.idtipopago=f.idtipopago
+where mv.pago=1 $P!{pcondicion}
+) as t GROUP BY formapago,procedencia
+) as t group by formapago]]>
+	</queryString>
+	<field name="formapago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Refaccionesmxp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Refaccionesdlls" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Serviciomxp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Serviciodlls" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Unidadesmxp" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Unidadesdlls" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="totalmxp" class="java.lang.String"/>
+	<variable name="totaldlls" class="java.lang.String"/>
+	<variable name="Refaccionesmxp_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Refaccionesmxp}]]></variableExpression>
+	</variable>
+	<variable name="Refaccionesdlls_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Refaccionesdlls}]]></variableExpression>
+	</variable>
+	<variable name="Serviciomxp_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Serviciomxp}]]></variableExpression>
+	</variable>
+	<variable name="Serviciodlls_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Serviciodlls}]]></variableExpression>
+	</variable>
+	<variable name="Unidadesmxp_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Unidadesmxp}]]></variableExpression>
+	</variable>
+	<variable name="Unidadesdlls_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Unidadesdlls}]]></variableExpression>
+	</variable>
+	<variable name="totmxp" class="java.lang.String"/>
+	<variable name="totdlls" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="93" y="7" width="120" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Refacciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="7" width="120" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Servicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="7" width="119" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Unidades]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="41" width="572" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="452" y="7" width="120" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="92" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Pesos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="153" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Dolares]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Pesos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="273" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Dolares]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Pesos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="393" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Dolares]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="28" width="50" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Dolares]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="452" y="28" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Pesos]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="92" y="4" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Refaccionesmxp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="153" y="4" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Refaccionesdlls}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="213" y="4" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Serviciomxp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="4" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Serviciodlls}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="333" y="4" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Unidadesmxp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="393" y="4" width="60" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Unidadesdlls}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="4" width="93" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{formapago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="453" y="4" width="59" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{Refaccionesmxp}+$F{Serviciomxp}+$F{Unidadesmxp})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="512" y="4" width="50" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Refaccionesdlls}+$F{Serviciodlls}+$F{Unidadesdlls}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="22" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="3" width="572" height="1"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="95" y="8" width="57" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Refaccionesmxp_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="154" y="8" width="59" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Refaccionesdlls_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="213" y="8" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Serviciomxp_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="8" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Serviciodlls_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="333" y="8" width="60" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Unidadesmxp_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="393" y="8" width="59" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Unidadesdlls_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="454" y="9" width="58" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Refaccionesmxp_1}+$V{Serviciomxp_1}+$V{Unidadesmxp_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="512" y="8" width="50" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Refaccionesdlls_1}+$V{Serviciodlls_1}+$V{Unidadesdlls_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

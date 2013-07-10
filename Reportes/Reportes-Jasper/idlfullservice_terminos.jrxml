@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="idlfullservice_terminos" language="groovy" pageWidth="504" pageHeight="752" columnWidth="504" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<parameter name="idpropuesta" class="java.lang.String"/>
+	<parameter name="idrevision" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select replace(terminos, "#notas#", p.notas) as terminos, if(u.apaterno is NULL or u.apaterno="", u.nombre, if(u.amaterno is NULL or u.amaterno="",
+concat(u.nombre, " ", u.apaterno), concat(u.nombre, " ", u.apaterno, " ", u.amaterno))) as vendedor
+from idlpropuestas p
+inner join idlpropuestastipos t on t.idtipopropuesta =p.idtipopropuesta
+inner join usuarios u on u.idusuario=p.idvendedor
+where p.idpropuesta= $P!{idpropuesta} and p.idrevision= $P!{idrevision}]]>
+	</queryString>
+	<field name="terminos" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vendedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="10" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="12" y="1" width="480" height="20"/>
+				<textElement markup="html">
+					<font isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{terminos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="100" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="51" width="485" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="71" width="485" height="20"/>
+				<textElement/>
+				<text><![CDATA[BAJA IDEALEASE SA DE CV]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,35 +1,5 @@
 [OpenFiles]
 Module1=dmconexion.php
-Module2=uresegnorefvista.php
-Module3=uproductosvista.php
-Module4=urecursos.php
 [dmconexion.php]
 Line=0
 Position=0
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\dmconexion.php]
-BreakpointCount=0
-[uresegnorefvista.php]
-Line=185
-Position=115
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uresegnorefvista.php]
-BreakpointCount=0
-[uproductosvista.php]
-Line=0
-Position=0
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\uproductosvista.php]
-BreakpointCount=0
-[urecursos.php]
-Line=0
-Position=0
-[C:\Users\Oscar\Documents\Delphi for PHP Projects\crm\urecursos.php]
-BreakpointCount=0
-[Watches]
-Watchcount=6
-Watch0=$_REQUEST
-Watch1=$_GET['idpuesto']
-Watch2=$this->edtdesde->Text
-Watch3=$this->edthasta->Text
-Watch4=$this->edtvendedor->Text
-Watch5=$sql
-[Status]
-OpenModule=uresegnorefvista.php
