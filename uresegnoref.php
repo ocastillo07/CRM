@@ -650,12 +650,16 @@ class uresegnoref extends Page
             $msg = "Modifico el Seguimiento a No Refacciones No. " . $this->edidsolicitud->Text;
             $nivel = 2;
 
+            if($this->edidresponsable->Text <> '')
+              $responsable =  'idresponsable="' . $this->edidresponsable->Text . '",';
+            else
+              $responsable =  '';
+
             $sql = 'update resegnoref set idestatus=' . $this->cbestatus->ItemIndex . ',
                     idnota=' . $this->hfidnota->Value . ', idplaza=' . $this->cbplaza->ItemIndex . ',
                     procedencia="' . $rgprocedencia . '",  idpresupuesto="' . $this->edpresupuesto->text . '",
                     idservicio="' . $this->edidservicio->Text . '", norecibo="' . $this->edrecibo->text . '",
-                    orden= "' . $this->lbadjunto->Caption . '", idresponsable="' . $this->edidresponsable->Text . '",
-                    usuario="' . $_SESSION["login"] . '", fecha=curdate(), hora=CURTIME()
+                    orden= "' . $this->lbadjunto->Caption . '", ' . $responsable . ' usuario="' . $_SESSION["login"] . '", fecha=curdate(), hora=CURTIME()
                     where idsolicitud = ' . $this->edidsolicitud->Text;
             $sql = mysql_query($sql)or die("Error de Consulta SQL: " . $sql . ' ' . mysql_error());
 
@@ -798,32 +802,33 @@ class uresegnoref extends Page
       if($this->hfidestatus->value == 1 && $this->cbestatus->ItemIndex > 2)
       {
            echo '<script language="javascript" type="text/javascript">
-                 alert("No se puede usar este estatus");
+                 alert("No se puede usar este estatus, primero debe pasar al estatus Proceso");
                  </script>';
             return false;
       }
 
-      if($this->hfidestatus->value == 2 &&
-        ( $this->cbestatus->ItemIndex == 1 || $this->cbestatus->ItemIndex > 4))
+      if($this->hfidestatus->value == 2 && ($this->cbestatus->ItemIndex == 1 || $this->cbestatus->ItemIndex > 4))
       {
-           echo '<script language="javascript" type="text/javascript">
+          if($this->cbestatus->ItemIndex == 1)
+            echo '<script language="javascript" type="text/javascript">
                  alert("No se puede usar este estatus");
                  </script>';
-            return false;
+          else
+             echo '<script language="javascript" type="text/javascript">
+                   alert("No se puede usar este estatus, primero debe pasar al estatus SOLICITA A COMPRA");
+                   </script>';
+          return false;
       }
 
-      if($this->hfidestatus->value == 3 &&
-        ( $this->cbestatus->ItemIndex < 3 || $this->cbestatus->ItemIndex == 4 ||
-          $this->cbestatus->ItemIndex > 5))
+      if($this->hfidestatus->value == 3 && $this->cbestatus->ItemIndex < 3) //|| $this->cbestatus->ItemIndex == 4 || $this->cbestatus->ItemIndex > 5))
       {
-           echo '<script language="javascript" type="text/javascript">
-                 alert("No se puede usar este estatus");
-                 </script>';
-            return false;
+          echo '<script language="javascript" type="text/javascript">
+                   alert("No se puede usar este estatus");
+                   </script>';
+          return false;
       }
 
-      if($this->hfidestatus->value == 5 &&
-        ( $this->cbestatus->ItemIndex < 5 || $this->cbestatus->ItemIndex > 6))
+      if($this->hfidestatus->value == 5 &&  $this->cbestatus->ItemIndex < 5) // || $this->cbestatus->ItemIndex > 6))
       {
            echo '<script language="javascript" type="text/javascript">
                  alert("No se puede usar este estatus");
@@ -907,7 +912,7 @@ class uresegnoref extends Page
               return false;
             }
 
-            if($this->edidresponsable->Text == '' )
+            if($this->edidresponsable->Text == '' && $this->cbestatus->ItemIndex == 3)
             {
                echo '<script language="javascript" type="text/javascript">
                  alert("No se ha registrado el Responsable de la compra");
@@ -1307,13 +1312,24 @@ class uresegnoref extends Page
 
 
       //inserta el detalle
+      if($tabla[i]['fechaestimada'] <> '')
+        $fechaEst = ' fechaestimada="' . $tabla[$i]['fechaestimada'] . '",';
+      else
+        $fechaEst = '';
+
+      if($tabla[i]['fechaestimada'] <> '')
+        $fechaRep = ' fecharecepcion="' . $tabla[$i]['fecharecepcion'] . '",';
+      else
+        $fechaRep = '';
+
+
       $rsm = "Update resegnorefdet set cveparte='" . $tabla[$i]['cveparte'] . "',
               cantidad='" . $tabla[$i]['cantidad'] . "', descripcion='" . replacememo($tabla[$i]['descripcion']) . "',
               precio='" . $tabla[$i]['precio'] . "', importe='" . $tabla[$i]['importe'] . "',
-              fechaestimada='" . $tabla[$i]['fechaestimada'] . "', surtido='" . $tabla[$i]['surtido'] . "',
+              " . $fechaEst . " surtido='" . $tabla[$i]['surtido'] . "',
               ocprt='" . $tabla[$i]['ocprt'] . "', proveedor='" . $tabla[$i]['proveedor'] . "',
               viaembarque='" . $tabla[$i]['viaembarque'] . "', guia='" . $tabla[$i]['guia'] . "',
-              fecharecepcion='" . $tabla[$i]['fecharecepcion'] . "', horarecepcion='" . $tabla[$i]['horarecepcion'] . "',
+               horarecepcion='" . $tabla[$i]['horarecepcion'] . "',
               papeleta='" . $tabla[$i]['papeleta'] . "', fletes='" . $tabla[$i]['fletes'] . "',
               usuario='" . $_SESSION['login'] . "', fecha=curdate(), hora=curtime()
               where idcontador=" . $row;

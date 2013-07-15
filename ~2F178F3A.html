@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<html>
+<head>
+<script type="text/javascript" src="../../../../../Program Files (x86)/CodeGear/Delphi for PHP/2.0/vcl/qooxdoo/framework/script/qx.js" charset="UTF-8"></script>
+<script type="text/javascript">
+  qx.log.Logger.ROOT_LOGGER.setMinLevel(qx.log.Logger.LEVEL_FATAL);
+  qx.manager.object.AliasManager.getInstance().add("static", "../../../../../Program Files (x86)/CodeGear/Delphi for PHP/2.0/vcl/qooxdoo/framework/resource/static/");
+  qx.manager.object.AliasManager.getInstance().add("widget", "../../../../../Program Files (x86)/CodeGear/Delphi for PHP/2.0/vcl/qooxdoo/framework/resource/widget/windows/");
+  qx.manager.object.AliasManager.getInstance().add("icon", "../../../../../Program Files (x86)/CodeGear/Delphi for PHP/2.0/vcl/qooxdoo/framework/resource/icon/VistaInspirate/");
+</script>
+</head>
+<script type="text/javascript">
+qx.OO.defineClass("qx.ui.table.CheckBoxCellEditorFactory", qx.ui.table.CellEditorFactory,
+function() {
+  qx.ui.table.CellEditorFactory.call(this);
+});
+
+
+// overridden
+qx.Proto.createCellEditor = function(cellInfo) {
+  var cellEditor = new qx.ui.form.CheckBox('','','',false);
+
+  cellEditor.setChecked(cellInfo.value);
+  return cellEditor;
+}
+
+
+// overridden
+qx.Proto.getCellEditorValue = function(cellEditor) {
+  var value = cellEditor.getChecked();
+  return value;
+}
+</script>
+<script type="text/javascript">
+qx.OO.defineClass("qx.ui.table.ComboBoxCellEditorFactory", qx.ui.table.CellEditorFactory,
+function() {
+  qx.ui.table.CellEditorFactory.call(this);
+  this.data=[];
+});
+
+
+// overridden
+qx.Proto.createCellEditor = function(cellInfo) {
+  var cellEditor = new qx.ui.form.ComboBoxEx;
+
+  cellEditor.setWidth('100%');
+  cellEditor.getField().setWidth('1*');
+
+
+  cellEditor.setSelection(this.data);
+
+  cellEditor.originalValue = cellInfo.value;
+  cellEditor.setValue("" + cellInfo.value);
+
+  return cellEditor;
+}
+
+
+// overridden
+qx.Proto.getCellEditorValue = function(cellEditor) {
+  var value = cellEditor.getSelectedRow();
+  value=value[1];
+
+  if (typeof cellEditor.originalValue == "number") {
+    value = parseFloat(value);
+  }
+  return value;
+}
+
+            qx.OO.defineClass("qx.ui.table.EasyDataCellRenderer", qx.ui.table.DefaultDataCellRenderer,
+            function()
+            {
+                this.color='';
+                this.fontcolor='';
+                this.alignment='';
+
+                this.setUseAutoAlign(true);
+                qx.ui.table.DefaultDataCellRenderer.call(this);
+
+            });
+
+
+            // overridden
+            qx.Proto._getCellStyle = function(cellInfo)
+            {
+              var html = cellInfo.style;
+
+              html+=';overflow:hidden;border-bottom:1px solid #F0F0F0;border-right:1px solid #F0F0F0';
+              if (this.color!='')
+              {
+                  html+=';background-color:'+this.color;
+              }
+
+              if (this.fontcolor!='')
+              {
+                  html+=';color:'+this.fontcolor;
+              }
+
+              if (this.alignment!='')
+              {
+                  html+=';text-align:'+this.alignment;
+              }
+              return html;
+            };
+</script><body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" ><input type="hidden" id="gridactividad_state" name="gridactividad_state" value="" />
+<div id="gridactividad"></div>
+<script type="text/javascript">
+  var d = qx.ui.core.ClientDocument.getInstance();
+  var inline_div = new qx.ui.basic.Inline("gridactividad");
+  inline_div.setHeight("auto");
+  inline_div.setWidth("auto");
+
+            // table model
+            var gridactividad_tableModel = new qx.ui.table.SimpleTableModel();
+                    var gridactividad    = new qx.ui.table.Table(gridactividad_tableModel);
+        gridactividad.setBorder(qx.renderer.border.BorderPresets.getInstance().shadow);
+        gridactividad.setBackgroundColor("white");
+        gridactividad.setWidth(783);
+        gridactividad.setHeight(524);
+        gridactividad.getSelectionModel().setSelectionMode(qx.ui.table.SelectionModel.MULTIPLE_INTERVAL_SELECTION);
+  d.add(inline_div);
+  inline_div.add(gridactividad);
+</script>
+</body>
+</html>
+
+</body>
+</html>

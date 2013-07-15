@@ -704,14 +704,13 @@ class urhpermisos extends Page
       }
 
       //fechas
-
-      if(strtotime($this->dtausencia->Text) < strtotime(date('Y/m/d')))
-      {
-         echo '<script language="javascript" type="text/javascript">
-             alert("La fecha de Ausencia es menor a la actual");
-             </script>';
-         return false;
-      }
+      //if(strtotime($this->dtausencia->Text) < strtotime(date('Y/m/d')))
+      //{
+      //   echo '<script language="javascript" type="text/javascript">
+      //       alert("La fecha de Ausencia es menor a la actual");
+      //       </script>';
+      //   return false;
+      //}
 
       if(strtotime($this->edinicio->Text) > strtotime($this->edfin->Text))
       {
