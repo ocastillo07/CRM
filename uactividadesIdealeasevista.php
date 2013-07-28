@@ -56,10 +56,10 @@ class uactividadesIdealeasevista extends Page
 
        function btnexportarClick($sender, $params)
        {
-         if(Derechos('EXPACTIVXASIG')==false)
+         if(Derechos('EXPACTIVIDEAL')==false)
          {
             echo '<script language="javascript" type="text/javascript">
-                    alert(\' No tienes Derechos para Exportar Actividades por Asignar\');
+                    alert(\'Usted no tiene derechos para Exportar Actividades de Idealease\');
                   </script>';
          }
          else
@@ -97,18 +97,18 @@ class uactividadesIdealeasevista extends Page
        //Add your javascript code here
          if(!confirm('Desea Eliminar la Actividad Seleccionada?'))
             return(false);
-         document.location.href("uactividadesxasignar.php?idactividad="+document.getElementById("hfidactividad").value+"&elim=1");
+         document.location.href("uactividadesIdealease.php?idactividad="+document.getElementById("hfidactividad").value+"&elim=1");
        <?php
        }
 
        function btnnuevoClick($sender, $params)
        {
-         if(Derechos('ALACTIVXASIG') == false)
+         if(Derechos('ALACTIVIDEAL') == false)
          	echo '<script language="javascript" type="text/javascript">
-            			alert("No puede dar de Alta Actividades por Asignar");
+            			alert("Usted no tiene derechos para dar de Alta Actividades de Idealease");
             		</script>';
       	else
-				redirect("uactividadesxasignar.php?idactividad=0");
+				redirect("uactividadesIdealease.php?idactividad=0");
        }
 
 
@@ -120,10 +120,10 @@ class uactividadesIdealeasevista extends Page
 
        function uactividadesIdealeasevistaCreate($sender, $params)
        {
-         if(Derechos('ACCACTIVXASIG') == false)
+         if(Derechos('ACCACTIVIDEAL') == false)
          {
             echo '<script language="javascript" type="text/javascript">
-                  alert("Usted no tiene derechos para Accesar Actividades por Asignar");
+                  alert("Usted no tiene derechos para Accesar Actividades de Idealease");
                   document.location.href("menu.php");
                   </script>';
             exit;
@@ -166,14 +166,14 @@ class uactividadesIdealeasevista extends Page
 
          $sql =  'select a.idactividadasignar as idactividad,concat(u.nombre," ",u.apaterno," ",u.amaterno) as vendedor,'.
          ' cla.nombre as asunto,clas.nombre as Estatus, a.descripcion,  a.fechaactividad as fechaactividad,horainicio,horafin, '.
-         $nom.'  as cliente from actividadesasignar a'.
+         $nom.'  as cliente from actividadesidealease a'.
          ' left join clientes c on a.idcliente=c.idcliente'.
          ' left join usuarios u on u.idusuario= a.idvendedor'.
          ' left join actividadesasuntos cla on cla.idasunto=a.idasunto
 			  left join clasificaciones clas on clas.idclasificacion=a.idestatus';
 
-        if(Derechos('TODACTIVXASIG')==true)                          //promotores
-            $sql=$sql.' where a.idvendedor>0 and u.idpuesto = 24 '.
+        if(Derechos('TODACTIVIDEAL')==true)
+            $sql=$sql.' where a.idvendedor>0 '.
                   $cond.' order by idactividad desc';
          else
             $sql=$sql.' where login="'.$_SESSION["login"].'" '.   //and u.idpuesto = ' . $_GET["idpuesto"] .
@@ -240,7 +240,7 @@ class uactividadesIdealeasevista extends Page
        {
        ?>
        //Add your javascript code here
-          document.location.href("uactividadesxasignar.php?idactividad="+document.getElementById("hfidactividad").value);
+          document.location.href("uactividadesIdealease.php?idactividad="+document.getElementById("hfidactividad").value);
        <?php
 
        }
@@ -252,7 +252,7 @@ class uactividadesIdealeasevista extends Page
        ?>
          var model=gridactividad.getTableModel();
          var row=gridactividad.getFocusedRow();
-         document.uactividadesxasignarvista.hfidactividad.value =model.getValue(0, row);
+         document.uactividadesIdealeasevista.hfidactividad.value =model.getValue(0, row);
        <?php
 
        }

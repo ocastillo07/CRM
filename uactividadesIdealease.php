@@ -91,14 +91,14 @@ class uactividadesIdealease extends Page
 			else
 			{
 				dmconexion::Log("Acceso a las notas de Actividades por Asignar".$this->edcliente->Text." ".$this->edcliente->Tag, 1);
-       		redirect("unotas.php?idnota=".$this->hfidnota->Value."&procedencia=actividadesxasignar".
+       		redirect("unotas.php?idnota=".$this->hfidnota->Value."&procedencia=uactividadesIdealease".
                 "&idprocedencia=".$this->hfidactividad->Value);
 			}
        }
 
        function btnbuscarClick($sender, $params)
        {
-         redirect("uclientesvista.php?pagina=uactividadesxasignar.php");
+         redirect("uclientesvista.php?pagina=uactividadesIdealease.php");
        }
 
        function btnguardarcerrarClick($sender, $params)
@@ -106,7 +106,7 @@ class uactividadesIdealease extends Page
          if($this->Validar() != false)
          {
             $this->guardar();
-            redirect('uactividadesxasignarvista.php');
+            redirect('uactividadesIdealeasevista.php');
          }
        }
 
@@ -120,37 +120,37 @@ class uactividadesIdealease extends Page
        {
          $ban=false;
          //alta
-			if($this->btnguardar->tag=='1')
+			   if($this->btnguardar->tag=='1')
          {
             $this->tbactividades->open();
             $this->tbactividades->insert();
-            $this->hfidactividad->Value = MaxId('actividadesasignar', 'idactividadasignar')+1;
+            $this->hfidactividad->Value = MaxId('actividadesidealease', 'idactividadasignar')+1;
             $this->tbactividades->fieldset("idactividadasignar", $this->hfidactividad->Value);
             $this->tbactividades->fieldset('fechacreacion',Date('Y/m/d'));
             $this->btnguardar->tag=2;
             $msg = "Creo la Actividad por Asignar No. ".$this->hfidactividad->Value;
             $nivel = 1;
             $ban=true;
-				//insertar nota al cliente de una nueva actividad
-				$sql='select idnota from clientes where idcliente='.$this->edcliente->Tag;
-				$rs=mysql_query($sql) or die('Error de consulta SQL: '.$sql);
-				$row=mysql_fetch_row($rs);
-				$idnota=$row[0];
-				if($row[0]==0)
-				{
-					$idnota = MaxId('notas', 'idnota')+1;
+            //insertar nota al cliente de una nueva actividad
+            $sql='select idnota from clientes where idcliente='.$this->edcliente->Tag;
+            $rs=mysql_query($sql) or die('Error de consulta SQL: '.$sql);
+            $row=mysql_fetch_row($rs);
+            $idnota=$row[0];
+            if($row[0]==0)
+            {
+					    $idnota = MaxId('notas', 'idnota')+1;
                $sql = "Update clientes set idnota=".$idnota." where idcliente = ".$this->edcliente->Tag;
                $result = mysql_query($sql) or die("error sql: ".$sql." ".mysql_error());
-					$sql = "Insert into notas (idnota,idprocedencia, procedencia, usuario, fecha, hora) ".
+					    $sql = "Insert into notas (idnota,idprocedencia, procedencia, usuario, fecha, hora) ".
                       "values (".$idnota.",".$this->edcliente->Tag.",'Clientes','".
-					$_SESSION['login']."', "."curdate(), curtime())";
+					    $_SESSION['login']."', "."curdate(), curtime())";
             	$result = mysql_query($sql) or die("error sql: ".$sql." ".mysql_error());
-				}
+				    }
             $this->hfidnota->value = $idnota;
-				$nota='Actividad: '.$this->cbasunto->Items[$this->cbasunto->ItemIndex].' Fecha: '.$this->dtactividad->Text.' '.
+				    $nota='Actividad: '.$this->cbasunto->Items[$this->cbasunto->ItemIndex].' Fecha: '.$this->dtactividad->Text.' '.
 							$this->cbinicio->Items[$this->cbinicio->ItemIndex].'-'.
 							$this->cbfin->Items[$this->cbfin->ItemIndex].' '.substr($this->mdescripcion->Text,0,120);
-				$sql = "Insert into notasdet (idnota, nota, usuario, fecha, hora) ".
+				    $sql = "Insert into notasdet (idnota, nota, usuario, fecha, hora) ".
                    "values (".$idnota.", '".$nota."', ".
                    "'".$_SESSION['login']."', "."curdate(), curtime())";
             $result = mysql_query($sql) or die("error sql: ".$sql." ".mysql_error());
@@ -166,21 +166,21 @@ class uactividadesIdealease extends Page
          }
          else   //modificacion
          {
-				$b=true;
-            if(Derechos('EDACTIVXASIG') == false)
-					$b=false;
-				if(Derechos('VALACTIVXASIG'))
-					$b=true;
+				    $b=true;
+            if(Derechos('EDACTIVIDEAL') == false)
+					    $b=false;
+				    if(Derechos('VALACTIVIDEAL'))
+					    $b=true;
 
-				if($b==false)
-				{
-					echo '<script language="javascript" type="text/javascript">
-               alert("No puede Modificar Actividades por Asignar");
-               window.location="uactividadesxasignar.php?idactividad='.$this->hfidactividad->Value.'";
-               </script>';
-				}
-				else
-				{
+            if($b==false)
+            {
+              echo '<script language="javascript" type="text/javascript">
+                   alert("Usted no tiene derechos para Modificar Actividades de Idealease");
+                   window.location="uactividadesIdealease.php?idactividad='.$this->hfidactividad->Value.'";
+                   </script>';
+            }
+            else
+            {
                $this->tbactividades->close();
                $this->tbactividades->writeFilter('idactividadasignar="'.$this->hfidactividad->Value.'"');
                $this->tbactividades->refresh();
@@ -196,14 +196,14 @@ class uactividadesIdealease extends Page
             $this->tbactividades->fieldset('idcliente',$this->edcliente->Tag);
             $this->tbactividades->fieldset('idvendedor',$this->cbasesor->ItemIndex);
             $this->tbactividades->fieldset('idasunto',$this->cbasunto->ItemIndex);
-            $this->tbactividades->fieldset('vin',$this->edvin->Text);
+            $this->tbactividades->fieldset('sector',$this->edSector->Text);
             $this->tbactividades->fieldset('idnota',$this->hfidnota->Value);
-				$this->tbactividades->fieldset('descripcion',$this->mdescripcion->Text);
-				$this->tbactividades->fieldset('notavalidacion',$this->mvalidacion->Text);
+				    $this->tbactividades->fieldset('descripcion',$this->mdescripcion->Text);
+				    $this->tbactividades->fieldset('notavalidacion',$this->mvalidacion->Text);
             $this->tbactividades->fieldset('fechaactividad',$this->dtactividad->Text);
             $this->tbactividades->fieldset('horainicio',$this->cbinicio->ItemIndex);
             $this->tbactividades->fieldset('horafin',$this->cbfin->ItemIndex);
-				$this->tbactividades->fieldset('idestatus',$this->cboestatus->ItemIndex);
+				    $this->tbactividades->fieldset('idestatus',$this->cboestatus->ItemIndex);
             $this->tbactividades->fieldset("usuario", $_SESSION["login"]);
             $this->tbactividades->fieldset("fecha", date("Y/n/j"));
             $this->tbactividades->fieldset("hora", date("H:i:s"));
@@ -211,12 +211,6 @@ class uactividadesIdealease extends Page
             $this->tbactividades->Active = false;
             dmconexion::Log($msg,$nivel);
          }
-       }
-
-       function btncerrarClick($sender, $params)
-       {
-         redirect('uactividadvista.php');
-         $this->lbtitulo->Caption= $this->Caption;
        }
 
        function Validar()
@@ -237,10 +231,10 @@ class uactividadesIdealease extends Page
              return false;
          }
 
-         if($this->cbasunto->ItemIndex == 5 && $this->edvin->Text == '')
+         if($this->edSector->Text == '')
          {
              echo '<script language="javascript" type="text/javascript">
-             alert("Falta el VIN de la demostración");
+             alert("Falta el Sector");
              </script>';
              return false;
          }
@@ -319,14 +313,14 @@ class uactividadesIdealease extends Page
          //promotores
          $this->cbasesor->Clear();
          $sql = 'select idusuario,concat(u.nombre," ",u.apaterno," ",u.amaterno) as promotor
-					from usuarios u where idpuesto = 24';
+					from usuarios u where idarea = 5 and estatus=1';
          $rs = mysql_query($sql)or die('Error SQL: ' . $sql);
          $this->cbasesor->AddItem('Sin Asignar', null , 0);
          while($row = mysql_fetch_array($rs))
             $this->cbasesor->AddItem($row['promotor'], null , $row['idusuario']);
 
          //$this->edvendedor->tag= $row[0];
-         if(Derechos('EDACTIVXASIG') == false)
+         if(Derechos('EDACTIVIDEAL') == false)
          {
 				$this->habilitar(false);
          }
@@ -345,7 +339,7 @@ class uactividadesIdealease extends Page
 			$this->mvalidacion->ReadOnly=!$ban;
 			$this->dtactividad->Enabled=$ban;
          $this->cboestatus->Enabled=$ban;
-         if(Derechos('TODACTIVXASIG'))
+         if(Derechos('TODACTIVIDEAL'))
 			   $this->cbasesor->Enabled= true;
          else
             $this->cbasesor->Enabled= false;
@@ -379,13 +373,13 @@ class uactividadesIdealease extends Page
             {
                $this->Limpiar();
                $this->inicializa();
-					$this->habilitar(true);
+					      $this->habilitar(true);
                $this->cbasesor->ItemIndex = $_SESSION['idusuario'];
-					$this->cboestatus->Enabled=false;
-					$this->mvalidacion->ReadOnly= true;
+					      $this->cboestatus->Enabled=false;
+					    $this->mvalidacion->ReadOnly= true;
                $this->btnguardar->Tag=1;
                $this->lblnotas->Caption='Notas';
-					$this->hfidnota->value=0;
+					    $this->hfidnota->value=0;
             }
             else
             {
@@ -411,9 +405,9 @@ class uactividadesIdealease extends Page
                $this->cbasesor->ItemIndex= $this->tbactividades->fieldget('idvendedor');
                $this->cbinicio->ItemIndex= $this->edvendedor->Text= $this->tbactividades->fieldget('horainicio');
                $this->cbfin->ItemIndex= $this->tbactividades->fieldget('horafin');
-               $this->edvin->Text= $this->tbactividades->fieldget('vin');
+               $this->edSector->Text= $this->tbactividades->fieldget('sector');
                $this->mdescripcion->Text= $this->tbactividades->fieldget('descripcion');
-					$this->mvalidacion->Text= $this->tbactividades->fieldget('notavalidacion');
+					     $this->mvalidacion->Text= $this->tbactividades->fieldget('notavalidacion');
                $this->dtactividad->IfFormat="%Y-%m-%d";
                $this->dtactividad->Text= $this->tbactividades->fieldget('fechaactividad');
 
@@ -428,7 +422,7 @@ class uactividadesIdealease extends Page
 					//estatus
 					$this->cboestatus->ItemIndex=$this->tbactividades->fieldget('idestatus');
 					//si ya esta validada o rechazada no se puede modificar
-					if(Derechos('VALACTIVXASIG'))
+					if(Derechos('VALACTIVIDEAL'))
 					{
 						$this->cboestatus->Enabled=true;
 						$this->mvalidacion->ReadOnly=false;
@@ -449,8 +443,8 @@ class uactividadesIdealease extends Page
 					$this->sqlnotas->close();
 					$this->sqlnotas->SQL ="SELECT n.nota,".str_replace("Modificado","Elaborado ",$r).
 							" as usuario from notasdet n
-							left join actividadesasignar a on a.idnota=n.idnota
-                     where idactividadasignar=".$this->hfidactividad->Value."
+							left join actividadesidealease a on a.idnota=n.idnota
+              where idactividadasignar=".$this->hfidactividad->Value."
 							order by n.fecha desc , n.hora desc limit 3";
                $this->sqlnotas->open();
 					$colores[0]="#ff5500";
@@ -479,7 +473,7 @@ class uactividadesIdealease extends Page
 
                //usuario fecha hora
                $r = ufh('a');
-               $sql= 'select '.$r.' as ufh from actividadesasignar a where idactividad='.$this->hfidactividad->Value;
+               $sql= 'select '.$r.' as ufh from actividadesidealease a where idactividadasignar='.$this->hfidactividad->Value;
                $rs= mysql_query($sql) or die('Error de SQL: '.$sql);
                $row= mysql_fetch_row($rs);
                $this->lbufh->Caption = $row[0];
@@ -487,11 +481,11 @@ class uactividadesIdealease extends Page
                //eliminar
                if(isset($_GET['elim']))
                {
-                  if(Derechos('ELACTIVXASIG') == false)
+                  if(Derechos('ELACTIVIDEAL') == false)
                   {
                      echo '<script language="javascript" type="text/javascript">
-                     alert("No Tienes el Derecho para Eliminar Actividades por Asignar");
-							document.location.href("uactividadesxasignarvista.php");
+                     alert("Usted no tiene derechos para Eliminar Actividades de Idealease");
+							       document.location.href("uactividadesIdealeasevista.php");
                      </script>';
                   }
                   else
@@ -501,7 +495,7 @@ class uactividadesIdealease extends Page
                      $this->tbactividades->delete();
                      $this->tbactividades->Active = false;
                      dmconexion::Log("Elimino la actividad por Asignar ".$_GET["idactividad"],3);
-                     redirect("uactividadesxasignarvista.php");
+                     redirect("uactividadesIdealeasevista.php");
                   }
                }
             }

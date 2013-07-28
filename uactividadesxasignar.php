@@ -479,7 +479,7 @@ class uactividadesxasignar extends Page
 
                //usuario fecha hora
                $r = ufh('a');
-               $sql= 'select '.$r.' as ufh from actividadesasignar a where idactividad='.$this->hfidactividad->Value;
+               $sql= 'select '.$r.' as ufh from actividadesasignar a where idactividadasignar='.$this->hfidactividad->Value;
                $rs= mysql_query($sql) or die('Error de SQL: '.$sql);
                $row= mysql_fetch_row($rs);
                $this->lbufh->Caption = $row[0];

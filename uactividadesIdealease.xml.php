@@ -378,7 +378,7 @@
     <property name="MasterFields">a:0:{}</property>
     <property name="MasterSource"></property>
     <property name="Name">tbactividades</property>
-    <property name="TableName">actividadesasignar</property>
+    <property name="TableName">actividadesidealease</property>
   </object>
   <object class="MySQLQuery" name="sqlnotas" >
         <property name="Left">615</property>
