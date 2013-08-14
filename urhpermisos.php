@@ -74,6 +74,7 @@ class urhpermisos extends Page
 
 
 
+
    function btnagregarJSClick($sender, $params)
    {
 
@@ -658,7 +659,7 @@ class urhpermisos extends Page
       if($this->edidcolaborador->Text == '')
       {
          echo '<script language="javascript" type="text/javascript">
-             alert("Falta el Colaborador de la Permiso");
+             alert("Falta el Colaborador del Permiso");
              </script>';
          return false;
       }
@@ -695,7 +696,7 @@ class urhpermisos extends Page
          return false;
       }
 
-      if(count($_SESSION['tablapermisos']) == 0)
+      if($this->rgtipo->ItemIndex ==1 && count($_SESSION['tablapermisos']) == 0)
       {
          echo '<script language="javascript" type="text/javascript">
              alert("Falta la fecha de reposicion");

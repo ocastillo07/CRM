@@ -39,6 +39,7 @@ class uresegnorefvista extends Page
 
 
 
+
    function btnexportarClick($sender, $params)
    {
       if(Derechos('REEXNOREF') == false)
@@ -177,16 +178,18 @@ class uresegnorefvista extends Page
 
       if($estatus != '')
          $cond = $cond . ' ' . $estatus;
-
+      //(select fecharecepcion from resegnorefdet det where det.idsolicitud = r.idsolicitud limit 1) as fecharecepcion,
+      //(select cveparte from resegnorefdet det where det.idsolicitud = r.idsolicitud limit 1) as cveparte,
       $sql = 'SELECT r.idsolicitud, e.nombre as estatus, p.nombre as plaza, r.fechacreacion,
               '.NombreFisica('u').' as originador, if(r.procedencia="S", "SERVICIO", "MOSTRADOR") as procedencia,
               if(r.procedencia="S", r.idservicio, r.norecibo) as documento, r.fechacierre,
-              (select fecharecepcion from resegnorefdet det where det.idsolicitud = r.idsolicitud limit 1) as fecharecepcion,
-              (select cveparte from resegnorefdet det where det.idsolicitud = r.idsolicitud limit 1) as cveparte,
+              fechaestimada,fecharecepcion, cveparte,
               replace((select descripcion from resegnorefdet det where det.idsolicitud = r.idsolicitud limit 1),"\\\", "") as des
               from resegnoref r left join plazas p on p.idplaza=r.idplaza
               left join resegnoref_estatus as e on e.idestatus=r.idestatus
-              left join usuarios u on u.idusuario=r.idoriginador ';
+              left join usuarios u on u.idusuario=r.idoriginador
+              inner join resegnorefdet det on det.idsolicitud = r.idsolicitud
+              GROUP BY idsolicitud ';
 
       /*if(Derechos('TODRESEGNOREF') == true)
          $sql = $sql . 'where r.idsolicitud > 0 ' . $cond . ' group by idsolicitud';

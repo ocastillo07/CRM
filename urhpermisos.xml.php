@@ -90,7 +90,6 @@
       <property name="ParentColor">0</property>
       <property name="Top">8</property>
       <property name="Width">75</property>
-      <property name="OnClick">btnimprimirClick</property>
       <property name="jsOnClick">btnimprimirJSClick</property>
     </object>
   </object>
