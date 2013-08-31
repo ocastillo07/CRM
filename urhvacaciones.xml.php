@@ -183,14 +183,14 @@
     <property name="jsOnBlur">edidcolaboradorJSBlur</property>
     <property name="jsOnKeyPress">edidcolaboradorJSKeyPress</property>
   </object>
-  <object class="Button" name="btnbuscarcli" >
+  <object class="Button" name="btncolaborador" >
     <property name="ButtonType">btNormal</property>
     <property name="Caption">Buscar</property>
     <property name="Height">21</property>
     <property name="Hint">Click para Buscar un Cliente</property>
     <property name="ImageSource">imagenes/edit-find22.png</property>
     <property name="Left">165</property>
-    <property name="Name">btnbuscarcli</property>
+    <property name="Name">btncolaborador</property>
     <property name="ParentColor">0</property>
     <property name="ParentFont">0</property>
     <property name="ParentShowHint">0</property>
@@ -198,7 +198,7 @@
     <property name="TabOrder">1</property>
     <property name="Top">96</property>
     <property name="Width">21</property>
-    <property name="OnClick">btnbuscarcliClick</property>
+    <property name="OnClick">btncolaboradorClick</property>
   </object>
   <object class="Edit" name="ednombre" >
     <property name="Height">21</property>

@@ -180,6 +180,13 @@
     <property name="Top">575</property>
     <property name="Width">683</property>
   </object>
+  <object class="HiddenField" name="hfparam" >
+    <property name="Height">18</property>
+    <property name="Left">705</property>
+    <property name="Name">hfparam</property>
+    <property name="Top">64</property>
+    <property name="Width">88</property>
+  </object>
   <object class="MySQLQuery" name="sqlgrid" >
         <property name="Left">200</property>
         <property name="Top">159</property>

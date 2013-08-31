@@ -16,6 +16,7 @@ use_unit("stdctrls.inc.php");
 //Class definition
 class urhcolaboradoresvista extends Page
 {
+   public $hfparam = null;
    public $lblpagina = null;
    public $btnsiguiente = null;
    public $btnregresar = null;
@@ -84,8 +85,15 @@ class urhcolaboradoresvista extends Page
        var pagina=document.getElementById('hfpagina').value;
        var model = grid.getTableModel();
        var row=grid.getFocusedRow();
-       vcl.$('hfidcolaborador').value = model.getValue(0, row);
-       document.location.href(pagina+"?idcolaborador="+model.getValue(0, row));
+       if(vcl.$('hfparam').value == 'c')
+       {
+          document.location.href(pagina+"?idcolaborador="+model.getValue(0, row)+"&tipo=c");
+       }
+       else
+       {
+          vcl.$('hfidcolaborador').value = model.getValue(0, row);
+          document.location.href(pagina+"?idcolaborador="+model.getValue(0, row));
+       }
 <?php
    }
 
@@ -202,6 +210,9 @@ class urhcolaboradoresvista extends Page
 
       if(isset($_GET['pagina']))
         $this->hfpagina->Value = $_GET['pagina'];
+
+      if(isset($_GET['tipo']))
+        $this->hfparam->Value = $_GET['tipo'];
    }
 
    function urhcolaboradoresvistaCreate($sender, $params)

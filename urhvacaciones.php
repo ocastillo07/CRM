@@ -16,6 +16,7 @@ use_unit("stdctrls.inc.php");
 //Class definition
 class urhvacaciones extends Page
 {
+   public $btncolaborador = null;
    public $hfidcubre = null;
    public $hfidcolaborador = null;
    public $btncal = null;
@@ -53,7 +54,6 @@ class urhvacaciones extends Page
    public $Label6 = null;
    public $Label5 = null;
    public $Label4 = null;
-   public $btnbuscarcli = null;
    public $Label3 = null;
    public $Label1 = null;
    public $edidsolicitud = null;
@@ -66,6 +66,12 @@ class urhvacaciones extends Page
    public $lbtitulo = null;
    public $btnguardarcerrar = null;
    public $btnguardar = null;
+   function btncolaboradorClick($sender, $params)
+   {
+      redirect('urhcolaboradoresvista.php?pagina=urhvacaciones.php');
+
+   }
+
    function btnimprimirJSClick($sender, $params)
    {
    ?>
@@ -130,10 +136,6 @@ class urhvacaciones extends Page
 <?php
    }
 
-   function btncolaboradorClick($sender, $params)
-   {
-      redirect('urhcolaboradoresvista.php?pagina=urhvacaciones.php');
-   }
 
    function edidcolaboradorJSBlur($sender, $params)
    {
